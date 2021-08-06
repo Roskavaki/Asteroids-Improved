@@ -1,0 +1,14 @@
+
+
+@font-face {
+    font-family: 'biting';
+    src: local('CustomFont2Name'),
+        url('../fonts/biting-my-nails/BITING.TTF') ;
+}
+
+
+
+.font3{
+	font-family: biting;
+	font-size: 40px;
+}
