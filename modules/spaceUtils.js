@@ -1,3 +1,4 @@
+import { checkCollision , checkCollisions , checkCollisionsOneToMany , checkInsideCircle } from "./collisionUtils.js";
 
 /** Wrap a coordinate around to the opposite side of the screen to create 
  * a toroidal coordinate system
@@ -5,6 +6,7 @@
 function wrapCoordinates( p , width=700, height=700){
 	let x = p[0];
 	let y = p[1];
+
 	if( x<0){
 		x=x+width;
 	}
@@ -72,68 +74,6 @@ function checkOutOfBounds( p=[1,1] , width=100 , height=100 ){
 	return false;
 }
 
-/**
- * Check if two coordinates are
- * within a certain range of each other
- * @param {*} p1 a point
- * @param {*} p2 a point
- * @param {*} radius a distance between
- * @returns true or false
- */
-function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
-	let d = distance(p1,p2);
-	//console.log( d )
-	return ( d < radius);
-}
-
-/**
- * Check for collision between A and B
- * @param {*} objectA 
- * @param {*} objectB 
- * @returns true if A and B have collided
- */
-function checkCollision( objectA , objectB ){
-	let layerA = objectA.collisionLayer;
-	let layerB = objectB.collisionLayer;
-
-	let canCollide = (layerA  <=  layerB);
-
-	if( canCollide ){
-		let totalRadius = objectA.collisionRadius + objectB.collisionRadius;
-		if( checkInsideCircle( objectA.position , objectB.position , totalRadius )){
-			return true;
-		}
-	}
-	return false;
-}
-
-/**
- * Check for collisions between a single object 
- * and a list of other objects
- * @param {*} x A single object
- * @param {*} objects an array of objects
- * @returns the first object which collided with x
- */
-function checkCollisionsOneToMany( x , objects=[] ){
-	for ( let ob in objects ){
-		//console.log( ob )
-		let curr = objects[ob];
-
-		let layerA =  curr.collisionLayer;
-		let layerB = x.collisionLayer;
-
-		let collide = (layerA  <=  layerB);
-
-		if( collide ){
-			if( checkInsideCircle(x.position , curr.position , curr.collisionRadius )){
-				return curr;
-			}			
-		}
-	}
-	return false;
-}
-
-
 
 function lineDefault( ctx , start , end , colour){
 	ctx.strokeStyle = colour;
@@ -183,6 +123,12 @@ function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
 	}		
 }
 
+/**
+ * Adds two vector twos together
+ * @param {*} point 
+ * @param {*} offset 
+ * @returns 
+ */
 function tf( point , offset ){
 	return [ point[0] + offset[0] , point[1] + offset[1] ];
 }
@@ -201,6 +147,10 @@ function rot( point,  theta ){
 	let xp = x*cos - y*sin;
 	let yp = x*sin + y*cos;
 	return  [ xp, yp ] ;
+}
+
+function rotDegrees( point , theta ){
+	return rot( point , theta * Math.PI/180 );
 }
 
 function drawVerts(ctx , verts , rotation=0 , position=[0,0], color="red" , wrap=false ){
@@ -227,13 +177,16 @@ function drawVerts(ctx , verts , rotation=0 , position=[0,0], color="red" , wrap
 }
 
 
-
-
+export { distance }
+export { checkCollisions }
+export { rotDegrees }
 export { lineDefault  , circleDefault }
 export {  line , pix , lerp  }
 export { difference , rot , tf , normalizedVectorTo  }
 export { midpoint , normalize , addVec , mulVec }
-export { checkCollisionsOneToMany , checkInsideCircle ,checkOutOfBounds }
+export { checkInsideCircle }
+export { checkOutOfBounds }
+export { checkCollisionsOneToMany , }
 export { checkCollision }
 export { wrapCoordinates }
 export { drawVerts }

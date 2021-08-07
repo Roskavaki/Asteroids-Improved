@@ -58,31 +58,7 @@ function checkPlayerCollisions(player, others = []) {
   }
 }
 
-/** Checks every object against every other object
- * Objects that cannot collide are skipped
- */
-function checkCollisions( objects){
-	for( let i=0; i< objects.length; i++ ){
-		let objectA = objects[i];
 
-		if( objectA.canCollide ){
-			for( let j=i+1; j<objects.length; j++ ){			
-				let objectB = objects[j];
-
-				if( objectB.canCollide ){
-					let collision = utils.checkCollision( objectA , objectB );
-
-					if( collision ){
-						objectA.onCollision( objectB );
-						objectB.onCollision( objectA );
-					}
-				}
-
-			}			
-		}
-
-	}
-}
 
 // Main game loop to draw each frame
 function mainloop() {
@@ -97,7 +73,7 @@ function mainloop() {
 
     checkPlayerCollisions(player, objs);
 
-    checkCollisions(objs);
+    utils.checkCollisions(objs);
 
     objs.forEach((element) => {
       element.update();
@@ -133,11 +109,20 @@ function mainloop() {
     }
 
     objectives = objectives.filter((ob) => !ob.markedForDestroy);
+	objectives.forEach(element => {
+		let complete = element.checkIfComplete();
+
+		if ( complete ){
+			objectives.pop ();
+		}
+	});
+
     if (objectives.length < 1) {
       //	console.log( 'level complete');
       currentLevel++;
       if (currentLevel > levels.length - 1) {
         currentLevel = 0;
+		console.log('All levels complete')
       }
       loadLevel(currentLevel);
     }

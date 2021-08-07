@@ -12,18 +12,38 @@ class playership extends spaceobj{
 
 		this.canCollide = true;
 		this.collisionLayer = 6;
-		
+
 		this.colour = colour;
 		this.rotationSpeed = 15;
 		this.fireSpeed = 3;
 
 		this.wrap=true;
+
+		this.hpBarPosition = "nw";//northwest
 	}
 
+	draw( ctx ){
+		// This object should wrap around when it goes offscreen
+		super.draw(ctx , this.wrap );
+
+		this.drawHpBar(ctx , this.hp , this.hpBarPosition);
+
+		//Debug circle
+		//utils.circleDefault(ctx , this.position , this.collisionRadius , this.color);
+	}
+
+	drawHpBar(ctx , hp , hpBarPosition){
+		let p = 5 ;
+		let q = 30;
+
+		if( hpBarPosition === "nw" )
+			ctx.fillRect( p , q , hp*5 , 5 );
+	}
 	
 	doDamage( x ){
 		this.hp-=x;
 		if( this.hp<=0){
+			this.hp=0;
 			console.log('player dies')	
 		}
 	}

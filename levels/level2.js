@@ -4,6 +4,8 @@ import { ShrinkingText } from "../modules/shrinkingText.js";
 import { spaceobj } from "../modules/spaceobj.js";
 import { nGon } from "../modules/shapes.js";
 
+import { DestroyAllAsteroids } from "../modules/destroyAllAsterObjective.js";
+
 let objs = [];
 
 const a1 = new asteroid(objs, 32, "red");
@@ -27,7 +29,9 @@ test.position = [300, 300];
 const txt = new ShrinkingText("Level 2");
 
 objs.push(a1, a2, a3, txt);
-let objectives = [a1];
+
+const objective = new DestroyAllAsteroids( objs );
+let objectives = [ objective ];
 
 let level2 = {
   levelname: "Level 1",
