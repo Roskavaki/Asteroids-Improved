@@ -16,7 +16,7 @@ a2.position = [200, 100];
 a2.velocity = [0.5, 0.5];
 a2.objectName = "a2";
 
-const a3 = new asteroid(objs, 16, "green");
+const a3 = new asteroid(objs, 64, "green");
 a3.position = [300, 100];
 a3.velocity = [-0.5, 0.5];
 a3.objectName = "a3";
@@ -24,15 +24,15 @@ a3.objectName = "a3";
 const test = new spaceobj(objs, nGon(10, 50), "yellow");
 test.position = [300, 300];
 
-const txt = new ShrinkingText("Level 1");
+const txt = new ShrinkingText("Level 2");
 
 objs.push(a1, a2, a3, txt);
 let objectives = [a1];
 
-let level = {
-  levelname: "Level 0",
+let level2 = {
+  levelname: "Level 1",
   objects: objs,
   objectives: objectives,
 };
 
-export { level };
+export { level2 };
