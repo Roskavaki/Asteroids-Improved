@@ -89,6 +89,8 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 	return false;
 }
 
+
+
 export { checkInsideCircle }
 export { checkCollision }
 export { checkCollisions }

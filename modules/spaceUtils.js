@@ -1,4 +1,7 @@
-import { checkCollision , checkCollisions , checkCollisionsOneToMany , checkInsideCircle } from "./collisionUtils.js";
+import { checkCollision , checkCollisions , checkCollisionsOneToMany , checkInsideCircle  } from "./collisionUtils.js";
+
+import { pix , line , drawVerts } from "./utils/drawingUtils.js";
+import { circleDefault , lineDefault } from "./utils/drawingUtils.js";
 
 /** Wrap a coordinate around to the opposite side of the screen to create 
  * a toroidal coordinate system
@@ -75,20 +78,6 @@ function checkOutOfBounds( p=[1,1] , width=100 , height=100 ){
 }
 
 
-function lineDefault( ctx , start , end , colour){
-	ctx.strokeStyle = colour;
-	ctx.beginPath();
-	ctx.moveTo(start[0], start[1]);
-	ctx.lineTo(end[0], end[1]);
-	ctx.stroke();
-}
-
-function circleDefault( ctx , position=[0,0] , radius=5 , colour="red" ){
-	ctx.strokeStyle = colour;
-	ctx.beginPath();
-	ctx.arc(position[0], position[1], radius,  0 , 2 * Math.PI );
-	ctx.stroke();
-}
 
 /** Lerp in one dimension */
 function lerp( a , b , ratio){
@@ -96,31 +85,10 @@ function lerp( a , b , ratio){
 }
 
 /** Lerp in 2 dimensions */
-function lerpXY(x1 , y1 , x2 , y2 , ratio){
+export function lerpXY(x1 , y1 , x2 , y2 , ratio){
 	let x = lerp( x1 , x2 , ratio );
 	let y = lerp( y1, y2 , ratio );
 	return [x, y ];
-}
-
-/** Draw a single dot */
-function pix( ctx, x , y , color="black"){
-	ctx.fillStyle = color;
-	ctx.fillRect( x , y, 1, 1);
-}
-
-/** Draw a line one pixel at a time, instead of using the default canvas command */
-function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
-	for( let aa=0; aa<1; aa+=0.05){
-		let p = lerpXY( x1 , y1 , x2 , y2 , aa);
-
-		if( wrap ){
-			let xy=wrapCoordinates( p );
-			pix( ctx , xy[0] , xy[1] ,  color);			
-		}
-		else{
-			pix( ctx , p[0] ,p[1] ,  color);
-		}
-	}		
 }
 
 /**
@@ -137,7 +105,7 @@ function tf( point , offset ){
  * Rotate a vector by theta (radians)
  * @param {*} point 
  * @param {*} theta 
- * @returns 
+ * @returns rotated vector
  */
 function rot( point,  theta ){
 	let cos = Math.cos( theta );
@@ -153,35 +121,14 @@ function rotDegrees( point , theta ){
 	return rot( point , theta * Math.PI/180 );
 }
 
-function drawVerts(ctx , verts , rotation=0 , position=[0,0], color="red" , wrap=false ){
-	//var verts = this.verts;
-	//var color = this.color;
-	if( verts.length>1){
-		let prev = verts[0];
-		for( let i=1; i<verts.length; i++){
-			let curr = verts[i];
-			let p1 = prev;
-			let p2 = curr;
-
-			p1 = rot( p1 , rotation );
-			p2 = rot( p2 , rotation );
-
-			p1 = tf( p1 , position );
-			p2 = tf( p2 , position );
-
-
-			line( ctx , p1[0] , p1[1], p2[0], p2[1] , color , wrap);
-			prev = curr;
-		}
-	}
-}
 
 
 export { distance }
 export { checkCollisions }
+
 export { rotDegrees }
 export { lineDefault  , circleDefault }
-export {  line , pix , lerp  }
+export { line , pix , lerp  }
 export { difference , rot , tf , normalizedVectorTo  }
 export { midpoint , normalize , addVec , mulVec }
 export { checkInsideCircle }

@@ -70,6 +70,18 @@ class playership extends spaceobj{
 		b.position = [...this.position];
 		bullets.push( b );
 	}
+
+	checkPlayerCollisions(player=this, others = []) {
+		let collision = utils.checkCollisionsOneToMany(player, others);
+		if (collision) {
+			console.log("Player collision");
+			let diff = utils.difference(player.position, collision.position);
+			let norm = utils.normalize(diff);
+			let mag = utils.mulVec(norm, -2);
+			player.doDamage(2);
+			player.velocity = mag;
+		}
+	}
 	
 }
 
