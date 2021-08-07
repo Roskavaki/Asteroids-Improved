@@ -44,7 +44,7 @@ function loadLevel(ind){
 }
 
 function checkPlayerCollisions( player , others=[] ){
-	let collision = utils.checkCollisions( player , others );
+	let collision = utils.checkCollisionsOneToMany( player , others );
 	if( collision ){
 		console.log("Player collision");
 		let diff =  utils.difference( player.position , collision.position );
@@ -52,6 +52,23 @@ function checkPlayerCollisions( player , others=[] ){
 		let mag  = utils.mulVec( norm , -2 );
 		player.doDamage( 2 );
 		player.velocity = mag;
+	}
+}
+
+/** Checks every object against every other object */
+function checkCollisions( objects ){
+	for( let i=0; i< objects.length; i++ ){
+		let objectA = objects[i];
+
+		for( let j=i+1; j<objects.length; j++ ){			
+			let objectB = objects[j];
+
+			let collision = utils.checkCollision( objectA , objectB );
+
+			if( collision ){
+				console.log( 'collision between ' + i + '  ' + j  );
+			}
+		}
 	}
 }
 
@@ -81,7 +98,7 @@ function mainloop(){
 		// Bullet collisions and removal if offscreen
 		for( var i=bullets.length-1; i>-1; i--){
 			let bullet = bullets[i];			
-			let collision = utils.checkCollisions( bullet , objs );
+			let collision = utils.checkCollisionsOneToMany( bullet , objs );
 			
 			if( utils.checkOutOfBounds( bullet.position ,  width , height) ){
 				bullets.splice(i, 1);
@@ -92,7 +109,6 @@ function mainloop(){
 			}
 		}
 
-		
 		// Object removal,  do not use filter
 		for( var i=objs.length-1; i>-1; i--){
 			var obj = objs[i];
@@ -112,7 +128,10 @@ function mainloop(){
 
 			loadLevel(currentLevel);
 		}
-		
+
+
+		checkCollisions( objs );
+
 		// Score
 		drawTextUpperLeft( ctx, scoreboard.toString() , width , height , 30 , true )
 	}
@@ -121,6 +140,8 @@ function mainloop(){
 
 // Load first level
 loadLevel( currentLevel );
+
+
 
 // Start the main loop
 setInterval( mainloop, 35 );

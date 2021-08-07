@@ -72,13 +72,49 @@ function checkOutOfBounds( p=[1,1] , width=100 , height=100 ){
 	return false;
 }
 
+/**
+ * Check if two coordinates are
+ * within a certain range of each other
+ * @param {*} p1 a point
+ * @param {*} p2 a point
+ * @param {*} radius a distance between
+ * @returns true or false
+ */
 function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 	let d = distance(p1,p2);
 	//console.log( d )
 	return ( d < radius);
 }
 
-function checkCollisions( x , objects ){
+/**
+ * Check for collision between A and B
+ * @param {*} objectA 
+ * @param {*} objectB 
+ * @returns true if A and B have collided
+ */
+function checkCollision( objectA , objectB ){
+	let layerA = objectA.collisionLayer;
+	let layerB = objectB.collisionLayer;
+
+	let canCollide = (layerA  <=  layerB);
+
+	if( canCollide ){
+		let totalRadius = objectA.collisionRadius + objectB.collisionRadius;
+		if( checkInsideCircle( objectA.position , objectB.position , totalRadius )){
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Check for collisions between a single object 
+ * and a list of other objects
+ * @param {*} x A single object
+ * @param {*} objects an array of objects
+ * @returns the first object which collided with x
+ */
+function checkCollisionsOneToMany( x , objects=[] ){
 	for ( let ob in objects ){
 		//console.log( ob )
 		let curr = objects[ob];
@@ -191,6 +227,7 @@ export { lineDefault  , circleDefault }
 export {  line , pix , lerp  }
 export { difference , rot , tf , normalizedVectorTo  }
 export { midpoint , normalize , addVec , mulVec }
-export { checkCollisions , checkInsideCircle ,checkOutOfBounds }
+export { checkCollisionsOneToMany , checkInsideCircle ,checkOutOfBounds }
+export { checkCollision }
 export { wrapCoordinates }
 export { drawVerts }

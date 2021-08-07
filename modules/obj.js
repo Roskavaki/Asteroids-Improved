@@ -32,7 +32,6 @@ class obj{
 		if( wrap ){
 			this.position = utils.wrapCoordinates( this.position );
 		}
-
 	}
 
 	addVert (x,y){
