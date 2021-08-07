@@ -66,7 +66,8 @@ function checkCollisions( objects ){
 			let collision = utils.checkCollision( objectA , objectB );
 
 			if( collision ){
-				console.log( 'collision between ' + i + '  ' + j  );
+				objectA.onCollision( objectB );
+				objectB.onCollision( objectA );
 			}
 		}
 	}
@@ -84,6 +85,8 @@ function mainloop(){
 		player.draw(ctx);
 
 		checkPlayerCollisions( player , objs );
+
+		checkCollisions( objs );
 
 		objs.forEach(element => {
 			element.update();
@@ -103,17 +106,20 @@ function mainloop(){
 			if( utils.checkOutOfBounds( bullet.position ,  width , height) ){
 				bullets.splice(i, 1);
 			}
-			else if ( collision ){
-				bullet.onCollision( collision );
+			else if ( collision ){	
 				bullets.splice(i, 1);
+				bullet.onCollision( collision );
+
+				console.log(objs)
 			}
 		}
 
 		// Object removal,  do not use filter
-		for( var i=objs.length-1; i>-1; i--){
+		for( var i=objs.length-1; i>=0; i--){
 			var obj = objs[i];
-			if( obj.markedForDestroy )
-				objs.splice(i, 1);			
+			if( obj.markedForDestroy ){
+				objs.splice( i, 1 );
+			}
 		}
 
 		objectives = objectives.filter( ob => !ob.markedForDestroy  );
@@ -126,8 +132,6 @@ function mainloop(){
 			loadLevel(currentLevel);
 		}
 
-		checkCollisions( objs );
-
 		// Score
 		drawTextUpperLeft( ctx, scoreboard.toString() , width , height , 30 , true )
 	}
@@ -138,7 +142,7 @@ function mainloop(){
 loadLevel( currentLevel );
 
 // Start the main loop
-setInterval( mainloop, 35 );
+setInterval( mainloop, 30 );
 
 
 window.addEventListener("keydown", function (event) {

@@ -1,7 +1,7 @@
 import * as utils from "./spaceUtils.js";
 
 class obj{
-	constructor( objects , myVerts ,  colour = "green" , collisionLayer=4 ){
+	constructor( objects , myVerts ,  colour = "green" , collisionLayer=4 , objectName="obj" ){
 		this.verts = [];
 
 		if( myVerts ){
@@ -19,6 +19,10 @@ class obj{
 
 		// Copied by reference so that we can spawn objects
 		this.objects = objects;
+
+		this.objectName = objectName;
+
+		this.children = [];
 	}
 
 	update(){}
@@ -39,31 +43,12 @@ class obj{
 	}
 
 	destroy(){
+		console.log( 'this.destroy' );
 		this.markedForDestroy = true;
 	}	
 
 	draw( ctx , wrap=false ){
 		utils.drawVerts( ctx , this.verts , this.rotation , this.position , this.color , wrap);
-		/*
-		var verts = this.verts;
-		var color = this.color;
-		if( verts.length>1){
-			var prev = verts[0];
-			for( var i=1; i<verts.length; i++){
-				var curr = verts[i];
-				var p1 = prev;
-				var p2 = curr;
-				p1 = utils.rot( p1 , this.rotation );
-				p2 = utils.rot( p2 , this.rotation );
-
-				p1 = utils.tf( p1 , this.position );
-				p2 = utils.tf( p2 , this.position );
-
-				utils.line( ctx , p1[0] , p1[1], p2[0], p2[1] , color);
-				prev = curr;
-			}
-		}
-		*/
 	}
 }
 
