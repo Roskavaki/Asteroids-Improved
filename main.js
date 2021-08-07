@@ -116,19 +116,15 @@ function mainloop(){
 				objs.splice(i, 1);			
 		}
 
-		objectives = objectives.filter( word => !word.markedForDestroy  );
+		objectives = objectives.filter( ob => !ob.markedForDestroy  );
 		if( objectives.length < 1){
-			console.log( 'level complete');
-
+		//	console.log( 'level complete');
 			currentLevel++;
-
 			if(currentLevel>levels.length-1){
 				currentLevel=0;
 			}
-
 			loadLevel(currentLevel);
 		}
-
 
 		checkCollisions( objs );
 
@@ -141,11 +137,8 @@ function mainloop(){
 // Load first level
 loadLevel( currentLevel );
 
-
-
 // Start the main loop
 setInterval( mainloop, 35 );
-
 
 
 window.addEventListener("keydown", function (event) {
