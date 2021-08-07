@@ -1,5 +1,5 @@
 import {obj} from "./obj.js";
-import {circleDefault } from "./spaceUtils.js";
+import {circleDefault } from "./utils/spaceUtils.js";
 
 class bullet extends obj{
 	constructor( objects , radius ){

@@ -1,7 +1,7 @@
 import { spaceobj } from "./spaceobj.js";
-import { rot , addVec } from "./spaceUtils.js";
+import { rot , addVec } from "./utils/spaceUtils.js";
 import { scoreboard } from "./scoreboard.js";
-import * as utils from "./spaceUtils.js";
+import * as utils from "./utils/spaceUtils.js";
 
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "red" ){

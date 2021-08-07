@@ -1,5 +1,5 @@
 import { obj } from "./obj.js";
-import {rot , circleDefault} from "./spaceUtils.js";
+import {rot , circleDefault} from "./utils/spaceUtils.js";
 
 class spaceobj extends obj {
 	constructor(objects, myVerts , colour = "red" , wrap = false ){

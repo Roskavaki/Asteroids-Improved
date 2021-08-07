@@ -4,7 +4,7 @@ import { ShrinkingText } from "../modules/shrinkingText.js";
 import { spaceobj } from "../modules/spaceobj.js";
 import { nGon } from "../modules/shapes.js";
 
-import { DestroyAllAsteroids } from "../modules/destroyAllAsterObjective.js";
+import { DestroyAllAsteroids } from "../modules/objectives/destroyAllAsterObjective.js";
 
 let objs = [];
 

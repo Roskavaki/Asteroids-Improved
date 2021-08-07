@@ -1,7 +1,7 @@
 import { spaceobj } from "./spaceobj.js";
-import { rot } from "./spaceUtils.js";
+import { rot } from "./utils/spaceUtils.js";
 import {bullet} from "./bullet.js";
-import * as utils from "./spaceUtils.js";
+import * as utils from "./utils/spaceUtils.js";
 import { tri } from "./shapes.js";
 
 class playership extends spaceobj{

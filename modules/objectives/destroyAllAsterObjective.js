@@ -1,5 +1,5 @@
 
-import { asteroid } from "./asteroid.js";
+import { asteroid } from "../asteroid.js";
 
 class DestroyAllAsteroids{
 	constructor( objects ){

@@ -1,4 +1,4 @@
-import * as utils from "./spaceUtils.js";
+import * as utils from "./utils/spaceUtils.js";
 
 class obj{
 	constructor( objects , myVerts ,  colour = "green" , collisionLayer=4 , objectName="obj" ){

@@ -1,7 +1,7 @@
 import { checkCollision , checkCollisions , checkCollisionsOneToMany , checkInsideCircle  } from "./collisionUtils.js";
 
-import { pix , line , drawVerts } from "./utils/drawingUtils.js";
-import { circleDefault , lineDefault } from "./utils/drawingUtils.js";
+import { pix , line , drawVerts } from "./drawingUtils.js";
+import { circleDefault , lineDefault } from "./drawingUtils.js";
 
 /** Wrap a coordinate around to the opposite side of the screen to create 
  * a toroidal coordinate system

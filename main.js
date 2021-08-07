@@ -2,7 +2,7 @@ import { spaceobj } from "./modules/spaceobj.js";
 import { playership } from "./modules/playership.js";
 import { bullet } from "./modules/bullet.js";
 import { sqr, tri } from "./modules/shapes.js";
-import * as utils from "./modules/spaceUtils.js";
+import * as utils from "./modules/utils/spaceUtils.js";
 
 import {
   drawText,
@@ -11,8 +11,10 @@ import {
 } from "./modules/textUtils.js";
 import { asteroid } from "./modules/asteroid.js";
 
-import { level } from "./levels/level1.js";
+import * as level1 from "./levels/level1.js";
 import { level2 } from "./levels/level2.js";
+
+import * as lastlevel from "./levels/victoryLevel.js";
 
 import { scoreboard } from "./modules/scoreboard.js";
 
@@ -38,7 +40,7 @@ let pwr = 0.1;
 let pause = false;
 
 let currentLevel = 0;
-let levels = [level, level2];
+let levels = [ level1.createLevel() , level2 , lastlevel.createLevel() ];
 
 function loadLevel(ind) {
 	let lvl = levels[ind];
@@ -51,70 +53,71 @@ function mainloop() {
   //ctx.clearRect(0, 0, width, height);
 
 	if (!pause) {
-	ctx.fillStyle = "black";
-	ctx.fillRect(0, 0, width, height);
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, width, height);
 
-	player.update();
-	player.draw(ctx);
+		player.update();
+		player.draw(ctx);
 
-	player.checkPlayerCollisions(player, objs);
+		player.checkPlayerCollisions(player, objs);
 
-	utils.checkCollisions(objs);
+		utils.checkCollisions(objs);
 
-	objs.forEach((element) => {
-		element.update();
-		element.draw(ctx);
-	});
+		objs.forEach((element) => {
+			element.update();
+			element.draw(ctx);
+		});
 
-	bullets.forEach((element) => {
-		element.update();
-		element.draw(ctx);
-	});
+		bullets.forEach((element) => {
+			element.update();
+			element.draw(ctx);
+		});
 
-	// Bullet collisions and removal if offscreen
-	for (var i = bullets.length - 1; i > -1; i--) {
-		let bullet = bullets[i];
-	  	let collision = utils.checkCollisionsOneToMany(bullet, objs);
+		// Bullet collisions and removal if offscreen
+		for (var i = bullets.length - 1; i > -1; i--) {
+			let bullet = bullets[i];
+			let collision = utils.checkCollisionsOneToMany(bullet, objs);
 
-		if (utils.checkOutOfBounds(bullet.position, width, height)) {
-			bullets.splice(i, 1);
-		} else if (collision) {
-			bullets.splice(i, 1);
-			bullet.onCollision(collision);
+			if (utils.checkOutOfBounds(bullet.position, width, height)) {
+				bullets.splice(i, 1);
+			} else if (collision) {
+				bullets.splice(i, 1);
+				bullet.onCollision(collision);
 
-			console.log(objs);
+				console.log(objs);
+			}
 		}
-	}
 
-	// Object removal,  do not use filter
-	for (var i = objs.length - 1; i >= 0; i--) {
-		var obj = objs[i];
-		if (obj.markedForDestroy) {
-			objs.splice(i, 1);
+		// Object removal,  do not use filter
+		for (var i = objs.length - 1; i >= 0; i--) {
+			var obj = objs[i];
+			if (obj.markedForDestroy) {
+				objs.splice(i, 1);
+			}
 		}
-	}
 
-	objectives = objectives.filter((ob) => !ob.markedForDestroy);
-	objectives.forEach(element => {
-		let complete = element.checkIfComplete();
+		objectives = objectives.filter((ob) => !ob.markedForDestroy);
+		objectives.forEach(element => {
+			let complete = element.checkIfComplete();
 
-		if ( complete ){
-			objectives.pop ();
-		}
-	});
+			if ( complete ){
+				objectives.pop ();
+			}
+		});
 
-	if (objectives.length < 1) {
-		//	console.log( 'level complete');
-		currentLevel++;
-		if (currentLevel > levels.length - 1) {
-			currentLevel = 0;
-			console.log('All levels complete');
-		}
+		if (objectives.length < 1) {
+			//	console.log( 'level complete');
+			currentLevel++;
+			if (currentLevel > levels.length - 1) {
+				currentLevel = 0;
+				console.log('All levels complete');
+			}
+			
 			loadLevel(currentLevel);
-	}
+		}
 
-	// Score
-	drawTextUpperLeft(ctx, scoreboard.toString(), width, height, 30, true);
+		// Score
+		drawTextUpperLeft(ctx, scoreboard.toString(), width, height, 30, true);
 	}
 }
 

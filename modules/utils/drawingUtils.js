@@ -2,7 +2,7 @@
  * A place mostly for functions for drawing things on the screen
  */
 
-import { rot , tf , wrapCoordinates , lerpXY } from "../spaceUtils.js";
+import { rot , tf , wrapCoordinates , lerpXY } from "./spaceUtils.js";
 
 
 /** Draw a line one pixel at a time, instead of using the default canvas command */
