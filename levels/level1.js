@@ -14,7 +14,7 @@ a1.objectName = "a1";
 
 const a2 = new asteroid(objs, 32, "red");
 a2.position = [200, 100];
-a2.velocity = [0.5, 0.5];
+a2.velocity = [0.5, -0.7];
 a2.objectName = "a2";
 
 const a3 = new asteroid( objs , 16 , "green" );

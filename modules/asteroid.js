@@ -12,7 +12,9 @@ class asteroid extends spaceobj{
 		this.colour = colour;
 		this.maxVariance = 14;
 		this.verts = this.generateAstroid();
+
 		this.collisionRadius = radi + this.maxVariance/2;
+		this.canCollide = true;
 		
 		this.angularVelocity = Math.random()*2;
 
@@ -28,34 +30,43 @@ class asteroid extends spaceobj{
 		*/
 
 	onCollision( other ){
+		// Type of other object
 		let ast = other instanceof asteroid;
 
 		if( ast ){
 			let diff = utils.difference( this.position , other.position);
 			let norm = utils.normalize( diff );
 			let mag = utils.mulVec(norm ,-1);
-
-			this.position = addVec( this.position , utils.mulVec(norm ,-1 ) );
-
+			this.position = addVec( this.position , utils.mulVec( norm ,-1 ) );
 			this.velocity = mag;
 		}
-		
-		//console.log( type );
 	}
 
 	doDamage( x ){
-		this.hp-=x;
 
-		if( this.hp<=0){
-			console.log( this.radius );
-			if( this.radius > 10){
-				this.createChild( [0.1 , 0] );
-				this.createChild( [-0.1, 0] );
+		if( !this.markedForDestroy ){
+			this.hp-=x;
+			let rad = this.radius;
+
+			if( this.hp<=0){
+				
+				if( rad > 10){
+
+					let divideAxis = utils.rot( utils.normalize(this.velocity) , 90* 3.14/180) ;
+					
+					// A small offset is needed to prevent divide by zero which makes the children dissapear
+					//[ rad/2+0.1 , 0]  [-rad/2-0.1 , 0]
+					//
+					this.createChild( utils.mulVec( divideAxis , rad/2 +1 ) );
+					this.createChild( utils.mulVec( divideAxis , -rad/2-1 )  );
+				}
+
+				scoreboard.add(1);
+				super.destroy();
 			}
-
-			scoreboard.add(1);
-			super.destroy();
 		}
+
+
 	}
 
 	createChild( offset = [0,0] ){
@@ -65,7 +76,10 @@ class asteroid extends spaceobj{
 		child.position =  [ this.position[0] + offset[0]  , this.position[1] + offset[1]  ];
 		child.velocity =  [ this.velocity[0]  , this.velocity[1] ];
 
-		let randomVelocity = [ -1 + Math.random()*2 , -1 + Math.random()*2 ];
+		let randomMultiplier = 4;
+
+		let randomVelocity = [ -randomMultiplier/2 + Math.random()*randomMultiplier ,
+			 -randomMultiplier/2 + Math.random()*randomMultiplier ];
 
 		child.velocity = addVec( child.velocity , randomVelocity );
 

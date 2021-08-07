@@ -12,6 +12,7 @@ class obj{
 		this.position = [0,0];
 		this.rotation = 0;
 
+		this.canCollide = false;
 		this.collisionRadius = 1;
 		this.collisionLayer = collisionLayer;
 

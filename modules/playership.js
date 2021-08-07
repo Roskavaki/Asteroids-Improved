@@ -9,7 +9,10 @@ class playership extends spaceobj{
 	constructor(objects , myVerts = null, colour = "red" ){
 		super(objects , tri , colour);
 		this.verts = tri;
+
+		this.canCollide = true;
 		this.collisionLayer = 6;
+		
 		this.colour = colour;
 		this.rotationSpeed = 15;
 		this.fireSpeed = 3;

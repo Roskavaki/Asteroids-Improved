@@ -55,21 +55,29 @@ function checkPlayerCollisions( player , others=[] ){
 	}
 }
 
-/** Checks every object against every other object */
-function checkCollisions( objects ){
+/** Checks every object against every other object
+ * Objects that cannot collide are skipped
+ */
+function checkCollisions( objects){
 	for( let i=0; i< objects.length; i++ ){
 		let objectA = objects[i];
 
-		for( let j=i+1; j<objects.length; j++ ){			
-			let objectB = objects[j];
+		if( objectA.canCollide ){
+			for( let j=i+1; j<objects.length; j++ ){			
+				let objectB = objects[j];
 
-			let collision = utils.checkCollision( objectA , objectB );
+				if( objectB.canCollide ){
+					let collision = utils.checkCollision( objectA , objectB );
 
-			if( collision ){
-				objectA.onCollision( objectB );
-				objectB.onCollision( objectA );
-			}
+					if( collision ){
+						objectA.onCollision( objectB );
+						objectB.onCollision( objectA );
+					}
+				}
+
+			}			
 		}
+
 	}
 }
 

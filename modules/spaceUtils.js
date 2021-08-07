@@ -187,6 +187,12 @@ function tf( point , offset ){
 	return [ point[0] + offset[0] , point[1] + offset[1] ];
 }
 
+/**
+ * Rotate a vector by theta (radians)
+ * @param {*} point 
+ * @param {*} theta 
+ * @returns 
+ */
 function rot( point,  theta ){
 	let cos = Math.cos( theta );
 	let sin = Math.sin( theta );
