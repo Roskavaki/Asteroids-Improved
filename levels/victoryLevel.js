@@ -1,11 +1,13 @@
-import { ShrinkingText } from "../modules/shrinkingText.js";
+
+
 import { NonCompletable } from "../modules/objectives/nonCompletableObjective.js";
+import { GrowingText } from "../modules/textObjects/growingText.js";
 
 
 function createLevel(){
 	let objs = [];
 
-	const txt = new ShrinkingText("Victory !");
+	const txt = new GrowingText("Victory !");
 	objs.push( txt );
 
 	const objective = new NonCompletable( objs );

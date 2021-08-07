@@ -1,5 +1,5 @@
-import { drawText , drawTextCenterScreen , drawTextUpperLeft } from './textUtils.js';
-import { obj } from './obj.js';
+import { drawText , drawTextCenterScreen , drawTextUpperLeft } from '../utils/textUtils.js';
+import { obj } from '../obj.js';
 
 
 export class ShrinkingText extends obj{

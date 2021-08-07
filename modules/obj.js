@@ -44,7 +44,7 @@ class obj{
 	}
 
 	destroy(){
-		console.log( 'this.destroy' );
+	//	console.log( 'this.destroy' );
 		this.markedForDestroy = true;
 	}	
 

@@ -8,7 +8,7 @@ import {
   drawText,
   drawTextCenterScreen,
   drawTextUpperLeft,
-} from "./modules/textUtils.js";
+} from "./modules/utils/textUtils.js";
 import { asteroid } from "./modules/asteroid.js";
 
 import * as level1 from "./levels/level1.js";
@@ -40,12 +40,41 @@ let pwr = 0.1;
 let pause = false;
 
 let currentLevel = 0;
-let levels = [ level1.createLevel() , level2 , lastlevel.createLevel() ];
+
+let levels =  [ level1.createLevel() , level2 , lastlevel.createLevel() ];
+
+//let levels =  [  lastlevel.createLevel() ];
 
 function loadLevel(ind) {
 	let lvl = levels[ind];
 	objs = lvl.objects;
 	objectives = lvl.objectives;
+}
+
+
+function removeDestroyedObjects( objs ){
+	// Object removal,  do not use filter
+	for (var i = objs.length - 1; i >= 0; i--) {
+		var obj = objs[i];
+		if (obj.markedForDestroy) {
+			objs.splice(i, 1);
+		}
+	}
+}
+
+function bulletCollisions( bullets , objs , width, height){
+	// Bullet collisions and removal if offscreen
+	for (var i = bullets.length - 1; i > -1; i--) {
+		let bullet = bullets[i];
+		let collision = utils.checkCollisionsOneToMany(bullet, objs);
+
+		if (utils.checkOutOfBounds(bullet.position, width, height)) {
+			bullets.splice(i, 1);
+		} else if (collision) {
+			bullets.splice(i, 1);
+			bullet.onCollision(collision);
+		}
+	}
 }
 
 // Main game loop to draw each frame
@@ -74,32 +103,16 @@ function mainloop() {
 		});
 
 		// Bullet collisions and removal if offscreen
-		for (var i = bullets.length - 1; i > -1; i--) {
-			let bullet = bullets[i];
-			let collision = utils.checkCollisionsOneToMany(bullet, objs);
+		bulletCollisions( bullets , objs , width, height);
 
-			if (utils.checkOutOfBounds(bullet.position, width, height)) {
-				bullets.splice(i, 1);
-			} else if (collision) {
-				bullets.splice(i, 1);
-				bullet.onCollision(collision);
+		removeDestroyedObjects( objs );
 
-				console.log(objs);
-			}
-		}
-
-		// Object removal,  do not use filter
-		for (var i = objs.length - 1; i >= 0; i--) {
-			var obj = objs[i];
-			if (obj.markedForDestroy) {
-				objs.splice(i, 1);
-			}
-		}
+		// Check if level is complete
+		//checkObjectives( objectives );
 
 		objectives = objectives.filter((ob) => !ob.markedForDestroy);
 		objectives.forEach(element => {
 			let complete = element.checkIfComplete();
-
 			if ( complete ){
 				objectives.pop ();
 			}
@@ -111,8 +124,7 @@ function mainloop() {
 			if (currentLevel > levels.length - 1) {
 				currentLevel = 0;
 				console.log('All levels complete');
-			}
-			
+			}			
 			loadLevel(currentLevel);
 		}
 
@@ -151,11 +163,19 @@ window.addEventListener(
 		player.rotateLeft();
 
 		break;
+
 		case "ArrowRight":
 		// code for "right arrow" key press.
 		player.rotateRight();
 		break;
+
+		case "Q":
+			// code for "right arrow" key press.
+			console.log('q');
+			break;
+
 		default:
+
 		return; // Quit when this doesn't handle the key event.
 		}
 

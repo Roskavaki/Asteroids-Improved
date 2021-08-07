@@ -6,7 +6,8 @@ import * as utils from "./utils/spaceUtils.js";
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "red" ){
 
-		console.log(' asteroid created' )
+	//	console.log(' asteroid created' );
+
 		super( objects , null , "yellow" );
 		this.radius = radi;
 		this.colour = colour;
@@ -83,7 +84,7 @@ class asteroid extends spaceobj{
 
 		child.velocity = addVec( child.velocity , randomVelocity );
 
-		console.log( child.position )
+		//console.log( child.position )
 
 		this.objects.push( child );
 		

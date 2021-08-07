@@ -1,6 +1,6 @@
 import { asteroid } from "../modules/asteroid.js";
 
-import { ShrinkingText } from "../modules/shrinkingText.js";
+import { ShrinkingText } from "../modules/textObjects/shrinkingText.js";
 import { spaceobj } from "../modules/spaceobj.js";
 import { nGon } from "../modules/shapes.js";
 
