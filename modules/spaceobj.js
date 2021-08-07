@@ -12,6 +12,7 @@ class spaceobj extends obj {
 		this.hp = 20;
 		
 		this.wrap = wrap;
+		
 	}
 
 	forward(){
@@ -27,15 +28,14 @@ class spaceobj extends obj {
 
 	doDamage( x ){
 		this.hp-=x;
-
 		if( this.hp<=0){
 			console.log('hp gone')
 			super.destroy();			
 		}
 	}
 
-
 	draw( ctx ){
+		// This object should wrap around when it goes offscreen
 		super.draw(ctx , this.wrap );
 
 		//Debug circle

@@ -19,9 +19,7 @@ export class ShrinkingText extends obj{
 	}
 
 
-	update(){
-
-	}
+	update(){}
 
 	draw(ctx){
 		this.textSize--;

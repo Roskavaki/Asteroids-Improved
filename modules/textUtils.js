@@ -1,7 +1,13 @@
 
-function drawText(ctx){
-	ctx.font = '48px serif';
-	ctx.strokeText('Hello world', 10, 50);
+/** Draw text at some position */
+function drawText(ctx , x=100,y=100 , txt='hello' , colour='red' , fontSize=24 , 
+	align='center' , baseline='middle' , font='serif'){
+	
+	ctx.strokeStyle = colour;
+	ctx.font = fontSize + 'px ' +  font;
+	ctx.textAlign =  align;
+	ctx.textBaseline = baseline;
+	ctx.strokeText( txt , x, y);
 }
 
 function drawTextCenterScreen( ctx ,txt ,  width=100 , height=100 , fontSize=30 , fill=false ){

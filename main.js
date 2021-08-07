@@ -44,7 +44,7 @@ function loadLevel(ind){
 }
 
 function checkPlayerCollisions( player , others=[] ){
-	let collision = utils.checkCollisions( player , others );
+	let collision = utils.checkCollisionsOneToMany( player , others );
 	if( collision ){
 		console.log("Player collision");
 		let diff =  utils.difference( player.position , collision.position );
@@ -52,6 +52,24 @@ function checkPlayerCollisions( player , others=[] ){
 		let mag  = utils.mulVec( norm , -2 );
 		player.doDamage( 2 );
 		player.velocity = mag;
+	}
+}
+
+/** Checks every object against every other object */
+function checkCollisions( objects ){
+	for( let i=0; i< objects.length; i++ ){
+		let objectA = objects[i];
+
+		for( let j=i+1; j<objects.length; j++ ){			
+			let objectB = objects[j];
+
+			let collision = utils.checkCollision( objectA , objectB );
+
+			if( collision ){
+				objectA.onCollision( objectB );
+				objectB.onCollision( objectA );
+			}
+		}
 	}
 }
 
@@ -68,6 +86,8 @@ function mainloop(){
 
 		checkPlayerCollisions( player , objs );
 
+		checkCollisions( objs );
+
 		objs.forEach(element => {
 			element.update();
 			element.draw( ctx );
@@ -81,38 +101,37 @@ function mainloop(){
 		// Bullet collisions and removal if offscreen
 		for( var i=bullets.length-1; i>-1; i--){
 			let bullet = bullets[i];			
-			let collision = utils.checkCollisions( bullet , objs );
+			let collision = utils.checkCollisionsOneToMany( bullet , objs );
 			
 			if( utils.checkOutOfBounds( bullet.position ,  width , height) ){
 				bullets.splice(i, 1);
 			}
-			else if ( collision ){
-				bullet.onCollision( collision );
+			else if ( collision ){	
 				bullets.splice(i, 1);
+				bullet.onCollision( collision );
+
+				console.log(objs)
 			}
 		}
 
-		
 		// Object removal,  do not use filter
-		for( var i=objs.length-1; i>-1; i--){
+		for( var i=objs.length-1; i>=0; i--){
 			var obj = objs[i];
-			if( obj.markedForDestroy )
-				objs.splice(i, 1);			
+			if( obj.markedForDestroy ){
+				objs.splice( i, 1 );
+			}
 		}
 
-		objectives = objectives.filter( word => !word.markedForDestroy  );
+		objectives = objectives.filter( ob => !ob.markedForDestroy  );
 		if( objectives.length < 1){
-			console.log( 'level complete');
-
+		//	console.log( 'level complete');
 			currentLevel++;
-
 			if(currentLevel>levels.length-1){
 				currentLevel=0;
 			}
-
 			loadLevel(currentLevel);
 		}
-		
+
 		// Score
 		drawTextUpperLeft( ctx, scoreboard.toString() , width , height , 30 , true )
 	}
@@ -123,8 +142,7 @@ function mainloop(){
 loadLevel( currentLevel );
 
 // Start the main loop
-setInterval( mainloop, 35 );
-
+setInterval( mainloop, 30 );
 
 
 window.addEventListener("keydown", function (event) {
