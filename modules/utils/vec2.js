@@ -7,18 +7,43 @@ export class Vec2 {
   }
 
   // math functions
+  /**
+   * creates the new vector resulting from adding this one to another
+   * @param {Vec2} other other vector
+   * @returns result of this + other
+   */
   add(other) {
     return new Vec2(this.x + other.x, this.y + other.y);
   }
+  /**
+   * creates the new vector resulting from subtracting this one to another
+   * @param {Vec2} other other vector
+   * @returns result of this - other
+   */
   sub(other) {
     return new Vec2(this.x - other.x, this.y - other.y);
   }
-  mul(other) {
-    return new Vec2(this.x * other, this.y * other);
+  /**
+   * creates the new vector resulting from multiplying this vector with the scalar
+   * @param {number} scalar the scalar
+   * @returns result of this * scalar
+   */
+  mul(scalar) {
+    return new Vec2(this.x * scalar, this.y * scalar);
   }
-  div(other) {
-    return new Vec2(this.x / other, this.y / other);
+  /**
+   * creates the new vector resulting from dividing this vector with the scalar
+   * @param {number}  scalar the scalar
+   * @returns result of this / scalar
+   */
+  div(scalar) {
+    return new Vec2(this.x / scalar, this.y / scalar);
   }
+  /**
+   * creates the new vector resulting from the dot product between the 2 vectors
+   * @param {Vec2} other other vector
+   * @returns result of this dot other
+   */
   dot(other) {
     return this.x * other.x + this.y * other.y;
   }
@@ -28,24 +53,40 @@ export class Vec2 {
   } */
 
   // util functions
+  /**
+   * length of the vector
+   * @returns length of the vector
+   */
   length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
+  /**
+   * returns a new normalized vector
+   * @returns normalized version of this vector
+   */
   normalized() {
-    return new Vec2(this.x / this.length, this.y / this.length);
+    return new Vec2(this.x / this.length(), this.y / this.length());
+  }
+
+  /**
+   * normalizes this vector
+   */
+  normalize() {
+    this.x = this.x / this.length();
+    this.y = this.y / this.length();
   }
 
   // identities
-  up() {
+  static up() {
     return new Vec2(0, 1);
   }
-  down() {
+  static down() {
     return new Vec2(0, -1);
   }
-  left() {
+  static left() {
     return new Vec2(1, 0);
   }
-  right() {
+  static right() {
     return new Vec2(-1, 0);
   }
 }
