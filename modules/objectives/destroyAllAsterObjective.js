@@ -1,6 +1,10 @@
 
 import { asteroid } from "../asteroid.js";
 
+/**
+ * Objective which is complete when all asteroids in the level are destroyed
+ */
+
 class DestroyAllAsteroids{
 	constructor( objects ){
 		this.objects = objects;

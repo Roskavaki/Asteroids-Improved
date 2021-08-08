@@ -18,6 +18,8 @@ import * as lastlevel from "./levels/victoryLevel.js";
 
 import { scoreboard } from "./modules/scoreboard.js";
 
+import * as bosslevel from "./levels/boss1Level.js";
+
 const canvas = document.getElementById("canvas");
 
 // Disable canvas alpha, for optimization
@@ -41,8 +43,8 @@ let pwr = 0.1;
 let pause = false;
 
 let currentLevel = 0;
-
-let levels = [level1.createLevel(), level2, lastlevel.createLevel()];
+//
+let levels = [bosslevel.createLevel() , level1.createLevel(), level2, lastlevel.createLevel()];
 
 let date = new Date();
 let currentTime = date.getTime();
