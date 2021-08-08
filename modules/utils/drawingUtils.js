@@ -7,6 +7,7 @@ import { rot , tf , wrapCoordinates , lerpXY } from "./spaceUtils.js";
 
 /** Draw a line one pixel at a time, instead of using the default canvas command */
 function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
+	ctx.save();
 	for( let aa=0; aa<1; aa+=0.05){
 		let p = lerpXY( x1 , y1 , x2 , y2 , aa);
 
@@ -17,7 +18,8 @@ function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
 		else{
 			pix( ctx , p[0] ,p[1] ,  color);
 		}
-	}		
+	}
+	ctx.restore();	
 }
 
 /**
@@ -28,24 +30,34 @@ function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
  * @param {*} colour 
  */
 function lineDefault( ctx , start , end , colour){
+	ctx.save();
+
 	ctx.strokeStyle = colour;
 	ctx.beginPath();
 	ctx.moveTo(start[0], start[1]);
 	ctx.lineTo(end[0], end[1]);
 	ctx.stroke();
+
+	ctx.restore();
 }
 
 function circleDefault( ctx , position=[0,0] , radius=5 , colour="red" ){
+	ctx.save();
+
 	ctx.strokeStyle = colour;
 	ctx.beginPath();
 	ctx.arc(position[0], position[1], radius,  0 , 2 * Math.PI );
 	ctx.stroke();
+
+	ctx.restore();
 }
 
 /** Draw a single dot */
 function pix( ctx, x , y , color="black"){
+
 	ctx.fillStyle = color;
 	ctx.fillRect( x , y, 1, 1);
+
 }
 
 

@@ -4,11 +4,11 @@ import { scoreboard } from "./scoreboard.js";
 import * as utils from "./utils/spaceUtils.js";
 
 class asteroid extends spaceobj{
-	constructor( objects , radi = 64 , colour = "red" ){
+	constructor( objects , radi = 64 , colour = "yellow" ){
 
 	//	console.log(' asteroid created' );
 
-		super( objects , null , "yellow" );
+		super( objects , null , colour );
 		this.radius = radi;
 		this.colour = colour;
 		this.maxVariance = 14;

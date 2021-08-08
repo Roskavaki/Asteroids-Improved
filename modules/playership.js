@@ -36,8 +36,10 @@ class playership extends spaceobj{
 		let p = 5 ;
 		let q = 30;
 
-		if( hpBarPosition === "nw" )
+		if( hpBarPosition === "nw" ){
+			ctx.fillStyle = "yellow";
 			ctx.fillRect( p , q , hp*5 , 5 );
+		}
 	}
 	
 	doDamage( x ){
@@ -78,7 +80,7 @@ class playership extends spaceobj{
 			let diff = utils.difference(player.position, collision.position);
 			let norm = utils.normalize(diff);
 			let mag = utils.mulVec(norm, -2);
-			player.doDamage(2);
+			player.doDamage( 5 );
 			player.velocity = mag;
 		}
 	}

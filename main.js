@@ -19,7 +19,11 @@ import * as lastlevel from "./levels/victoryLevel.js";
 import { scoreboard } from "./modules/scoreboard.js";
 
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+
+// Disable canvas alpha, for optimization
+const ctx = canvas.getContext("2d" , { alpha: false } );
+
+
 ctx.fillStyle = "green";
 let width = canvas.width;
 let height = canvas.height;
@@ -29,9 +33,6 @@ let bullets = [];
 let objectives = [];
 
 let player = new playership(objs, tri, "yellow");
-let ast = new asteroid(objs, 50, "yellow");
-objs.push(ast);
-
 player.position = [width / 2, height / 2 + 60];
 
 let pwr = 0.1;
@@ -129,7 +130,7 @@ function mainloop() {
 		}
 
 		// Score
-		drawTextUpperLeft(ctx, scoreboard.toString(), width, height, 30, true);
+		drawTextUpperLeft(ctx, scoreboard.toString(), "yellow" , width, height, 30, true);
 	}
 }
 

@@ -12,14 +12,14 @@ import { DestroyAllAsteroids } from "../modules/objectives/destroyAllAsterObject
 function createLevel(){
 	let objs = [];
 
-	const a1 = new asteroid(objs, 32, "red");
+	const a1 = new asteroid(objs, 32, "yellow");
 	a1.position = [100, 100];
 	a1.velocity = [1, 0.5];
 	a1.objectName = "a1";
 
-	const a2 = new asteroid(objs, 32, "red");
-	a2.position = [200, 100];
-	a2.velocity = [0.5, -0.7];
+	const a2 = new asteroid(objs, 32, "yellow");
+	a2.position = [500, 500];
+	a2.velocity = [-0.9, 1.1];
 	a2.objectName = "a2";
 
 
