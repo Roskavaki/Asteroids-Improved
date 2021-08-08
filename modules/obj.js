@@ -32,7 +32,7 @@ class obj {
     this.children = [];
   }
 
-  update(deltaT) {}
+  update(deltaT, input) {}
 
   onCollision(other) {}
 
