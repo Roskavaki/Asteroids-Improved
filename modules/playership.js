@@ -13,12 +13,13 @@ class playership extends spaceobj {
     this.collisionLayer = 6;
 
     this.colour = colour;
-    this.rotationSpeed = 15;
+    this.rotationSpeed = 15; //currently 15 degrees per step, should be 15 degrees/second
     this.fireSpeed = 3;
 
     this.wrap = true;
 
     this.hpBarPosition = "nw"; //northwest
+
     this.reloadTime = 0.5;
     this.isReloading = false;
   }
@@ -57,6 +58,7 @@ class playership extends spaceobj {
   }
 
   rotateLeft() {
+    // utils.lerp()
     this.rotation += (-this.rotationSpeed * 3.14) / 180;
   }
 
