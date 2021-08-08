@@ -21,7 +21,7 @@ class playership extends spaceobj {
 
     this.hpBarPosition = "nw"; //northwest
 
-    this.reloadTime = 0.5;
+    this.reloadTime = 0.25;
     this.isReloading = false;
   }
 

@@ -4,7 +4,7 @@ import { ShrinkingText } from "../modules/textObjects/shrinkingText.js";
 import { spaceobj } from "../modules/spaceobj.js";
 import { nGon } from "../modules/shapes.js";
 
-
+import { DestroyParticularObject } from "../modules/objectives/destroyParticularObject.js";
 import { NonCompletable } from "../modules/objectives/nonCompletableObjective.js";
 import { DestroyAllAsteroids } from "../modules/objectives/destroyAllAsterObjective.js";
 import { Boss1 } from "../modules/gameObjects/boss1.js";
@@ -24,7 +24,7 @@ function createLevel() {
 
 
 
-	const objective = new NonCompletable( objs );
+	const objective = new DestroyParticularObject( boss );
 	let objectives = [ objective ];	
 
 	objs.push(boss , a1, txt);
