@@ -6,11 +6,8 @@ import { nGon } from "../modules/shapes.js";
 
 import { DestroyAllAsteroids } from "../modules/objectives/destroyAllAsterObjective.js";
 
-
-
-
-function createLevel(){
-	let objs = [];
+function createLevel() {
+ 	let objs = [];
 
 	const a1 = new asteroid(objs, 32, "yellow");
 	a1.position = [100, 100];
@@ -21,18 +18,13 @@ function createLevel(){
 	a2.position = [500, 500];
 	a2.velocity = [-0.9, 1.1];
 	a2.objectName = "a2";
-
-
-	const test = new spaceobj(objs, nGon(10, 50), "yellow");
-	test.position = [300, 300];
-
+  	
 	const txt = new ShrinkingText("Level 1");
 
-	const objective = new DestroyAllAsteroids( objs );
-	let objectives = [ objective ];
+	const objective = new DestroyAllAsteroids(objs);
+	let objectives = [objective];
 
 	objs.push(a1, a2, txt);
-
 
 	let level = {
 		levelname: "Level 0",
@@ -40,7 +32,7 @@ function createLevel(){
 		objectives: objectives,
 	};
 
-	return level;
+  return level;
 }
 
 export { createLevel };

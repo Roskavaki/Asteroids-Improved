@@ -1,56 +1,69 @@
 import * as utils from "./utils/spaceUtils.js";
 
-class obj{
-	constructor( objects , myVerts ,  colour = "green" , collisionLayer=4 , objectName="obj" ){
-		this.verts = [];
+class obj {
+  constructor(
+    objects,
+    myVerts,
+    colour = "green",
+    collisionLayer = 4,
+    objectName = "obj"
+  ) {
+    this.verts = [];
 
-		if( myVerts ){
-			this.verts = myVerts;
-		}
-			
-		this.color = colour;
-		this.position = [0,0];
-		this.rotation = 0;
+    if (myVerts) {
+      this.verts = myVerts;
+    }
 
-		this.canCollide = false;
-		this.collisionRadius = 1;
-		this.collisionLayer = collisionLayer;
+    this.color = colour;
+    this.position = [0, 0];
+    this.rotation = 0;
 
-		this.markedForDestroy = false;
+    this.canCollide = false;
+    this.collisionRadius = 1;
+    this.collisionLayer = collisionLayer;
 
-		// Copied by reference so that we can spawn objects
-		this.objects = objects;
+    this.markedForDestroy = false;
 
-		this.objectName = objectName;
+    // Copied by reference so that we can spawn objects
+    this.objects = objects;
 
-		this.children = [];
-	}
+    this.objectName = objectName;
 
-	update(){}
+    this.children = [];
+  }
 
-	onCollision( other ){}
+  update(deltaT) {}
 
-	addPosition( offset , wrap=false ){
-		this.position[0] += offset[0];
-		this.position[1] += offset[1];
+  onCollision(other) {}
 
-		if( wrap ){
-			this.position = utils.wrapCoordinates( this.position );
-		}
-	}
+  addPosition(offset, wrap = false) {
+    this.position[0] += offset[0];
+    this.position[1] += offset[1];
 
-	addVert (x,y){
-		this.verts.push( [x , y] );
-	}
+    if (wrap) {
+      this.position = utils.wrapCoordinates(this.position);
+    }
+  }
 
-	destroy(){
-	//	console.log( 'this.destroy' );
-		this.markedForDestroy = true;
-	}	
+  addVert(x, y) {
+    this.verts.push([x, y]);
+  }
 
-	draw( ctx , wrap=false ){
-		utils.drawVerts( ctx , this.verts , this.rotation , this.position , this.color , wrap);
-	}
+  destroy() {
+    //	console.log( 'this.destroy' );
+    this.markedForDestroy = true;
+  }
+
+  draw(ctx, wrap = false) {
+    utils.drawVerts(
+      ctx,
+      this.verts,
+      this.rotation,
+      this.position,
+      this.color,
+      wrap
+    );
+  }
 }
 
-export {obj}
+export { obj };

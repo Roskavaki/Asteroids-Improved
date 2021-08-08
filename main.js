@@ -42,7 +42,11 @@ let pause = false;
 
 let currentLevel = 0;
 
-let levels =  [ level1.createLevel() , level2 , lastlevel.createLevel() ];
+let levels = [level1.createLevel(), level2, lastlevel.createLevel()];
+
+let date = new Date();
+let currentTime = date.getTime();
+let lastTime = currentTime;
 
 //let levels =  [  lastlevel.createLevel() ];
 
@@ -52,8 +56,7 @@ function loadLevel(ind) {
 	objectives = lvl.objectives;
 }
 
-
-function removeDestroyedObjects( objs ){
+function removeDestroyedObjects(objs) {
 	// Object removal,  do not use filter
 	for (var i = objs.length - 1; i >= 0; i--) {
 		var obj = objs[i];
@@ -63,8 +66,8 @@ function removeDestroyedObjects( objs ){
 	}
 }
 
-function bulletCollisions( bullets , objs , width, height){
-	// Bullet collisions and removal if offscreen
+function bulletCollisions(bullets, objs, width, height) {
+  // Bullet collisions and removal if offscreen
 	for (var i = bullets.length - 1; i > -1; i--) {
 		let bullet = bullets[i];
 		let collision = utils.checkCollisionsOneToMany(bullet, objs);
@@ -82,11 +85,15 @@ function bulletCollisions( bullets , objs , width, height){
 function mainloop() {
   //ctx.clearRect(0, 0, width, height);
 
+	lastTime = currentTime;
+	currentTime = date.getTime();
+	let deltaT = currentTime - lastTime;
+
 	if (!pause) {
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, width, height);
 
-		player.update();
+		player.update(deltaT);
 		player.draw(ctx);
 
 		player.checkPlayerCollisions(player, objs);
@@ -94,28 +101,28 @@ function mainloop() {
 		utils.checkCollisions(objs);
 
 		objs.forEach((element) => {
-			element.update();
+			element.update(deltaT);
 			element.draw(ctx);
 		});
 
 		bullets.forEach((element) => {
-			element.update();
+			element.update(deltaT);
 			element.draw(ctx);
 		});
 
 		// Bullet collisions and removal if offscreen
-		bulletCollisions( bullets , objs , width, height);
+		bulletCollisions(bullets, objs, width, height);
 
-		removeDestroyedObjects( objs );
+		removeDestroyedObjects(objs);
 
 		// Check if level is complete
 		//checkObjectives( objectives );
 
 		objectives = objectives.filter((ob) => !ob.markedForDestroy);
-		objectives.forEach(element => {
+		objectives.forEach((element) => {
 			let complete = element.checkIfComplete();
-			if ( complete ){
-				objectives.pop ();
+			if (complete) {
+			objectives.pop();
 			}
 		});
 
@@ -123,9 +130,9 @@ function mainloop() {
 			//	console.log( 'level complete');
 			currentLevel++;
 			if (currentLevel > levels.length - 1) {
-				currentLevel = 0;
-				console.log('All levels complete');
-			}			
+			currentLevel = 0;
+			console.log("All levels complete");
+			}
 			loadLevel(currentLevel);
 		}
 
@@ -142,46 +149,45 @@ setInterval(mainloop, 30);
 
 window.addEventListener(
   "keydown",
-	function (event) {
-		if (event.defaultPrevented) {
-			return; // Do nothing if the event was already processed
-		}
+  function (event) {
+	if (event.defaultPrevented) {
+	  return; // Do nothing if the event was already processed
+	}
 
-		switch (event.key) {
-		case "ArrowDown":
+	switch (event.key) {
+	  case "ArrowDown":
 		// code for "down arrow" key press.
 		//fire( player.position , player.forward() , 2 , player.velocity );
 		player.fire(bullets);
 
 		break;
-		case "ArrowUp":
+	  case "ArrowUp":
 		// code for "up arrow" key press.
 		player.thrust([0, -pwr]);
 		//ddd2.velocity = [ ddd2.velocity[0] + thrust[0] , ddd2.velocity[1] + thrust[1] ];
 		break;
-		case "ArrowLeft":
+	  case "ArrowLeft":
 		// code for "left arrow" key press.
 		player.rotateLeft();
 
 		break;
 
-		case "ArrowRight":
+	  case "ArrowRight":
 		// code for "right arrow" key press.
 		player.rotateRight();
 		break;
 
-		case "Q":
-			// code for "right arrow" key press.
-			console.log('q');
-			break;
+	  case "Q":
+		// code for "right arrow" key press.
+		console.log("q");
+		break;
 
-		default:
-
+	  default:
 		return; // Quit when this doesn't handle the key event.
-		}
+	}
 
-		// Cancel the default action to avoid it being handled twice
-		event.preventDefault();
-	},
-	true
+	// Cancel the default action to avoid it being handled twice
+	event.preventDefault();
+  },
+  true
 );

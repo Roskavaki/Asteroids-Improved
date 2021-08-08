@@ -1,6 +1,6 @@
 import { spaceobj } from "./spaceobj.js";
 import { rot } from "./utils/spaceUtils.js";
-import {bullet} from "./bullet.js";
+import { bullet } from "./bullet.js";
 import * as utils from "./utils/spaceUtils.js";
 import { tri } from "./shapes.js";
 
@@ -20,6 +20,10 @@ class playership extends spaceobj{
 		this.wrap=true;
 
 		this.hpBarPosition = "nw";//northwest
+
+		
+		this.reloadTime = 0.5;
+		this.isReloading = false;
 	}
 
 	draw( ctx ){
@@ -65,14 +69,6 @@ class playership extends spaceobj{
 		this.rotation += this.rotationSpeed * 3.14/180;
 	}
 
-	fire( bullets ){
-		let b = new bullet( 3 );
-		let fwd = utils.normalize( this.forward() );
-		b.velocity =  utils.addVec( this.velocity , utils.mulVec(fwd , -this.fireSpeed)   );
-		b.position = [...this.position];
-		bullets.push( b );
-	}
-
 	checkPlayerCollisions(player=this, others = []) {
 		let collision = utils.checkCollisionsOneToMany(player, others);
 		if (collision) {
@@ -84,7 +80,30 @@ class playership extends spaceobj{
 			player.velocity = mag;
 		}
 	}
+
+	fire(bullets) {
+		if (!this.isReloading) {
+
+			let b = new bullet(3);
+			let fwd = utils.normalize(this.forward());
+			b.velocity = utils.addVec(
+				this.velocity,
+				utils.mulVec(fwd, -this.fireSpeed)
+			);
+			
+			b.position = [...this.position];
+			bullets.push(b);
+			this.reload();
+		}
+	}
+	
+	async reload() {
+		this.isReloading = true;
+		setTimeout(() => {
+			this.isReloading = false;
+		}, this.reloadTime * 1000);
+	}
 	
 }
 
-export {playership}
+export { playership };
