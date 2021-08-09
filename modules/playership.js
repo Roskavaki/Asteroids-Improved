@@ -3,111 +3,114 @@ import { rot } from "./utils/spaceUtils.js";
 import { bullet } from "./bullet.js";
 import * as utils from "./utils/spaceUtils.js";
 import { tri } from "./shapes.js";
+import { Vec2 } from "./utils/vec2.js";
+import { BulletV2 } from "./gameObjects/bulletV2.js";
 
 class playership extends spaceobj {
-  constructor(objects, myVerts = null, colour = "red") {
-    super(objects, tri, colour);
-    this.verts = tri;
+	constructor(objects, myVerts = null, colour = "red") {
+		super(objects, tri, colour);
+		this.verts = tri;
 
-    this.canCollide = true;
-    this.collisionLayer = 6;
+		this.canCollide = true;
+		this.collisionLayer = 1;
 
-    this.colour = colour;
-    this.thrustSpd = 0.5;
-    this.rotationSpeed = 60;
-    this.fireSpeed = 300;
+		this.colour = colour;
+		this.thrustSpd = 1;
+		this.rotationSpeed = 90;
+		this.fireSpeed = 4;
 
-    this.wrap = true;
+		this.wrap = true;
 
-    this.hpBarPosition = "nw"; //northwest
+		this.hpBarPosition = "nw"; //northwest
 
-    this.reloadTime = 0.25;
-    this.isReloading = false;
-  }
+		this.reloadTime = 0.25;
+		this.isReloading = false;
+	}
 
-  draw(ctx) {
-    // This object should wrap around when it goes offscreen
-    super.draw(ctx, this.wrap);
+	draw(ctx) {
+		// This object should wrap around when it goes offscreen
+		super.draw(ctx, this.wrap);
 
-    this.drawHpBar(ctx, this.hp, this.hpBarPosition);
+		this.drawHpBar(ctx, this.hp, this.hpBarPosition);
 
-    //Debug circle
-    //utils.circleDefault(ctx , this.position , this.collisionRadius , this.color);
-  }
+		//Debug circle
+		//utils.circleDefault(ctx , this.position , this.collisionRadius , this.color);
+	}
 
-  drawHpBar(ctx, hp, hpBarPosition) {
-    let p = 5;
-    let q = 30;
+	drawHpBar(ctx, hp, hpBarPosition) {
+		let p = 5;
+		let q = 30;
 
-    if (hpBarPosition === "nw") {
-      ctx.fillStyle = "yellow";
-      ctx.fillRect(p, q, hp * 5, 5);
-    }
-  }
+		if (hpBarPosition === "nw") {
+			ctx.fillStyle = "yellow";
+			ctx.fillRect(p, q, hp * 5, 5);
+		}
+	}
 
-  doDamage(x) {
-    this.hp -= x;
-    if (this.hp <= 0) {
-      this.hp = 0;
-      console.log("player dies");
-    }
-  }
+	doDamage(x) {
+		this.hp -= x;
+		if (this.hp <= 0) {
+			this.hp = 0;
+			console.log("player dies");
+		}
+	}
 
-  update(deltaT, input, bullets) {
-    if (input.getKey("W")) {
-      var thrust = rot([0, -this.thrustSpd * deltaT], this.rotation);
-      this.velocity = [
-        this.velocity[0] + thrust[0],
-        this.velocity[1] + thrust[1],
-      ];
-    }
-    if (input.getKey("a") && !input.getKey("D")) {
-      this.rotation -= (deltaT * this.rotationSpeed * 3.14) / 180;
-    }
-    if (input.getKey("D") && !input.getKey("A")) {
-      this.rotation += (deltaT * this.rotationSpeed * 3.14) / 180;
-    }
+	update(deltaT, input, bullets) {
+		if (input.getKey("W")) {
+			var thrust = this.forward().mul(-0.1);
 
-    if (input.getKey(32)) {
-      this.fire(bullets);
-    }
+			this.velocity = new Vec2( 
+				this.velocity.x + thrust.x,
+				this.velocity.y + thrust.y
+			);
+		}
 
-    super.updatePosition(deltaT);
-  }
+		if (input.getKey("a") && !input.getKey("D")) {
+			this.rotation -= (deltaT * this.rotationSpeed * 3.14) / 180;
+		}
 
-  checkPlayerCollisions(player = this, others = []) {
-    let collision = utils.checkCollisionsOneToMany(player, others);
-    if (collision) {
-      console.log("Player collision");
-      let diff = utils.difference(player.position, collision.position);
-      let norm = utils.normalize(diff);
-      let mag = utils.mulVec(norm, -2);
-      player.doDamage(5);
-      player.velocity = mag;
-    }
-  }
+		if (input.getKey("D") && !input.getKey("A")) {
+			this.rotation += (deltaT * this.rotationSpeed * 3.14) / 180;
+		}
 
-  fire(bullets) {
-    if (!this.isReloading) {
-      let b = new bullet(3);
-      let fwd = utils.normalize(this.forward());
-      b.velocity = utils.addVec(
-        this.velocity,
-        utils.mulVec(fwd, -this.fireSpeed)
-      );
+		if (input.getKey(32)) {
+			this.fire(bullets);
+		}
 
-      b.position = [...this.position];
-      bullets.push(b);
-      this.reload();
-    }
-  }
+		super.updatePosition(deltaT);
+	}
 
-  async reload() {
-    this.isReloading = true;
-    setTimeout(() => {
-      this.isReloading = false;
-    }, this.reloadTime * 1000);
-  }
+	checkPlayerCollisions(player = this, others = []) {
+		let collision = utils.checkCollisionsOneToMany(player, others);
+		if (collision) {
+			console.log("Player collision");
+			let diff = utils.difference(player.position, collision.position);
+			let norm = utils.normalize(diff);
+			let mag  = utils.mulVec(norm, -2);
+			player.doDamage(5);
+			player.velocity = mag;
+		}
+	}
+
+	fire() {
+		if (!this.isReloading) {
+			let b = new BulletV2(this.objects , 4);
+			this.objects.push( b );
+			let forwardspeed = this.forward().mul( -this.fireSpeed );
+			b.velocity = new Vec2( this.velocity.x , this.velocity.y ).add( forwardspeed );
+			b.position = new Vec2( this.position.x , this.position.y );
+			b.collisionLayer = 2;
+			b.damage = 10;
+			this.reload();
+		}
+	}
+
+	async reload() {
+		this.isReloading = true;
+		setTimeout(() => {
+			this.isReloading = false;
+		}, this.reloadTime * 1000);
+	}
 }
 
 export { playership };

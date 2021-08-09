@@ -8,6 +8,7 @@ import { DestroyParticularObject } from "../modules/objectives/destroyParticular
 import { NonCompletable } from "../modules/objectives/nonCompletableObjective.js";
 import { DestroyAllAsteroids } from "../modules/objectives/destroyAllAsterObjective.js";
 import { Boss1 } from "../modules/gameObjects/boss1.js";
+import { Vec2 } from "../modules/utils/vec2.js";
 
 function createLevel() {
  	let objs = [];
@@ -16,18 +17,10 @@ function createLevel() {
   	
 	const txt = new ShrinkingText("Boss!");
 
-
-	const a1 = new asteroid(objs, 32, "yellow");
-	a1.position = [100, 100];
-	a1.velocity = [1, 0.5];
-	a1.objectName = "a1";
-
-
-
 	const objective = new DestroyParticularObject( boss );
 	let objectives = [ objective ];	
 
-	objs.push(boss , a1, txt);
+	objs.push(boss , txt);
 
 	let level = {
 		levelname: "Bossfight",

@@ -76,6 +76,56 @@ export class Vec2 {
     this.y = this.y / this.length();
   }
 
+  /**
+   * Rotate this vector theta radians
+   * @param {*} theta 
+   */
+  rotate( theta ){
+    let cos = Math.cos( theta );
+    let sin = Math.sin( theta );
+    let x = this.x;
+    let y = this.y;
+    let xp = x*cos - y*sin;
+    let yp = x*sin + y*cos;
+    this.x=xp;
+    this.y=yp;
+    //return  new Vec2( xp, yp );
+  }
+  
+  rotDegrees( theta ){
+    this.rotate( theta * Math.PI/180 );
+  }
+
+  cpy(){
+    return new Vec2( this.x , this.y );
+  }
+
+  toArray(){
+    return [this.x , this.y];
+  }
+
+  wrap( width=700 , height=700 ){
+    let x = this.x;
+    let y = this.y;
+
+    if( x<0 ){
+      x = x + width;
+    }
+    else if( x>= width ){
+      x = x - width;
+    }
+  
+    if( y<0 ){
+      y = y + height;
+    }
+    else if( y >= height ){
+      y = y - height;
+    }
+  
+    this.x = x;
+    this.y = y;
+  }
+
   // identities
   static up() {
     return new Vec2(0, 1);

@@ -4,6 +4,32 @@
 import { distance } from "./spaceUtils.js";
 
 /**
+ * Keep it square.
+ * Keep it symetrical on the Upper-left to bottom-right diagonal 
+ * because you don't know the order the objects may be checked in and we don't check duplicates ex: A-B and B-A.
+ *
+ */
+export const collisionLayers = [
+	[1, 1, 0, 0, 1], //other, general case
+	[1, 1, 0, 1, 1], //player
+	[0, 0, 0, 1, 0], //playerbullet
+	[0, 1, 1, 1, 1], //asteroid
+	[1, 1, 0, 1, 0] //enemybullet
+];
+
+export const collisionLayerNames = {
+	"other":0,
+	"player":1,
+	"playerbullet":2,
+	"asteroid":3,
+	"enemybullet":4
+}
+
+export function checkCollisionLayers( layerA=0 , layerB=0 ){
+	return ( collisionLayers[layerA][layerB] > 0);
+}
+
+/**
  * Check if two coordinates are
  * within a certain range of each other
  * @param {*} p1 a point
@@ -52,11 +78,16 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 	let layerA = objectA.collisionLayer;
 	let layerB = objectB.collisionLayer;
 
-	let canCollide = (layerA  <=  layerB);
+	let canCollide = checkCollisionLayers( layerA , layerB );
+	//(layerA  <=  layerB);
 
 	if( canCollide ){
 		let totalRadius = objectA.collisionRadius + objectB.collisionRadius;
-		if( checkInsideCircle( objectA.position , objectB.position , totalRadius )){
+
+		let p1 = [objectA.position.x , objectA.position.y];
+		let p2 = [objectB.position.x , objectB.position.y];
+		if( checkInsideCircle( p1  , p2 , totalRadius )){
+			console.log( 'collision' );
 			return true;
 		}
 	}
@@ -75,15 +106,16 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 		//console.log( ob )
 		let curr = objects[ob];
 
-		let layerA =  curr.collisionLayer;
+		let layerA = curr.collisionLayer;
 		let layerB = x.collisionLayer;
 
 		let collide = (layerA  <=  layerB);
 
-		if( collide ){
-			if( checkInsideCircle(x.position , curr.position , curr.collisionRadius )){
+		if( curr !==  x ){
+			let didhit = checkCollision( x , curr );
+			if( didhit ){
 				return curr;
-			}			
+			}
 		}
 	}
 	return false;

@@ -65,7 +65,7 @@ function mulVec( vec=[0,0] , num=1 ){
 	return [vec[0]*num , vec[1]*num];
 }
 
-function checkOutOfBounds( p=[1,1] , width=100 , height=100 ){
+function checkOutOfBounds( p=[1,1] , width=700 , height=700 ){
 	let x = p[0];
 	let y = p[1];
 

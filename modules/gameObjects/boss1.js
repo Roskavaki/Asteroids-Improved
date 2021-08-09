@@ -6,6 +6,7 @@ import { bullet  } from "../bullet.js";
 import { BulletV2 } from "./bulletV2.js";
 
 import * as utils from "../utils/spaceUtils.js";
+import { Vec2 } from "../utils/vec2.js";
 
 export class Boss1 extends spaceobj{
 
@@ -21,9 +22,9 @@ export class Boss1 extends spaceobj{
 		this.collisionRadius = radius;
 		this.canCollide = true;
 
-		this.position=[ 350 ,300 ];
+		this.position= new Vec2(350 ,300)  ;
 		this.angularVelocity = 2.2 ;
-		this.velocity=[0,0];
+		this.velocity=new Vec2(0 ,0) ;
 
 		console.log('boss');
 
@@ -45,22 +46,18 @@ export class Boss1 extends spaceobj{
 		this.fire();
 	}
 
-	fire( ) {
+	fire() {
 		if (!this.isReloading) {
-
-			let b = new BulletV2(this.objects , 8);
-			let fwd = utils.normalize(this.forward());
-			b.velocity = utils.addVec(
-				this.velocity,
-				utils.mulVec(fwd, -this.fireSpeed)
-			);
-			
-			b.position = [...this.position];
-			this.objects.push(b);
+			let b = new BulletV2(this.objects , 4);
+			this.objects.push( b );
+			let forwardspeed = this.forward().mul( -this.fireSpeed );
+			b.velocity = this.velocity.cpy().add( forwardspeed );
+			b.position = this.position.cpy();
+			b.collisionLayer = 2;
 			this.reload();
 		}
 	}
-	
+
 	async reload() {
 		this.isReloading = true;
 		setTimeout(() => {

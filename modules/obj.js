@@ -1,11 +1,12 @@
 import * as utils from "./utils/spaceUtils.js";
+import { Vec2 } from "./utils/vec2.js";
 
 class obj {
   constructor(
     objects,
     myVerts,
     colour = "green",
-    collisionLayer = 4,
+    collisionLayer = 0,
     objectName = "obj"
   ) {
     this.verts = [];
@@ -15,7 +16,7 @@ class obj {
     }
 
     this.color = colour;
-    this.position = [0, 0];
+    this.position = new Vec2(0,0);
     this.rotation = 0;
 
     this.canCollide = false;
@@ -37,11 +38,14 @@ class obj {
   onCollision(other) {}
 
   addPosition(offset, wrap = false) {
-    this.position[0] += offset[0];
-    this.position[1] += offset[1];
+    //this.position[0] += offset[0];
+    //this.position[1] += offset[1];
+	this.position = this.position.add( offset );
+
+
 
     if (wrap) {
-      this.position = utils.wrapCoordinates(this.position);
+		this.position.wrap();
     }
   }
 
@@ -59,7 +63,7 @@ class obj {
       ctx,
       this.verts,
       this.rotation,
-      this.position,
+      [this.position.x , this.position.y],
       this.color,
       wrap
     );

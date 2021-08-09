@@ -4,10 +4,12 @@ import { bullet } from "./modules/bullet.js";
 import { sqr, tri } from "./modules/shapes.js";
 import * as utils from "./modules/utils/spaceUtils.js";
 
+import { Vec2 } from "./modules/utils/vec2.js";
+
 import {
-  drawText,
-  drawTextCenterScreen,
-  drawTextUpperLeft,
+	drawText,
+	drawTextCenterScreen,
+	drawTextUpperLeft,
 } from "./modules/utils/textUtils.js";
 import { Input } from "./modules/input.js";
 
@@ -36,9 +38,9 @@ let bullets = [];
 let objectives = [];
 
 let player = new playership(objs, tri, "yellow");
-player.position = [width / 2, height / 2 + 60];
+player.position = new Vec2( width / 2, height / 2 + 60);
 
-let pwr = 0.1;
+
 
 // Pause rendering and game logic
 let pause = false;
@@ -55,104 +57,106 @@ let gameInput = new Input(window);
 //let levels =  [  lastlevel.createLevel() ];
 
 function loadLevel(ind) {
-  let lvl = levels[ind];
-  objs = lvl.objects;
-  objectives = lvl.objectives;
+	let lvl = levels[ind];
+	objs       = lvl.objects;
+	objectives = lvl.objectives;
+
+	player.objects = objs;
+
+//	objs.push( player );
 }
 
 function removeDestroyedObjects(objs) {
-  // Object removal,  do not use filter
-  for (var i = objs.length - 1; i >= 0; i--) {
-    var obj = objs[i];
-    if (obj.markedForDestroy) {
-      objs.splice(i, 1);
-    }
-  }
+	// Object removal,  do not use filter
+	for (var i = objs.length - 1; i >= 0; i--) {
+		var obj = objs[i];
+		if (obj.markedForDestroy) {
+			objs.splice(i, 1);
+		}
+	}
+}
+
+function showScoreboard(){
+	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, true );
 }
 
 function bulletCollisions(bullets, objs, width, height) {
-  // Bullet collisions and removal if offscreen
-  for (var i = bullets.length - 1; i > -1; i--) {
-    let bullet = bullets[i];
-    let collision = utils.checkCollisionsOneToMany(bullet, objs);
+	// Bullet collisions and removal if offscreen
+	for (var i = bullets.length - 1; i > -1; i--) {
+		let bullet = bullets[i];
+		let collision = utils.checkCollisionsOneToMany(bullet, objs);
 
-    if (utils.checkOutOfBounds(bullet.position, width, height)) {
-      bullets.splice(i, 1);
-    } else if (collision) {
-      bullets.splice(i, 1);
-      bullet.onCollision(collision);
-    }
-  }
+		if (utils.checkOutOfBounds( [bullet.position.x , bullet.position.y] , width, height)) {
+			bullets.splice(i, 1);
+		} else if (collision) {
+			bullets.splice(i, 1);
+			bullet.onCollision(collision);
+		}
+	}
 }
 
 // Main game loop to draw each frame
 function mainloop() {
-  //ctx.clearRect(0, 0, width, height);
+	//ctx.clearRect(0, 0, width, height);
 
-  date = new Date();
-  lastTime = currentTime;
-  currentTime = date.getTime();
-  let deltaT = (currentTime - lastTime) / 1000;
-  // console.log(currentTime);
+	date = new Date();
+	lastTime = currentTime;
+	currentTime = date.getTime();
+	let deltaT = (currentTime - lastTime) / 1000;
+	// console.log(currentTime);
 
-  if (!pause) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, width, height);
+	if (!pause) {
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, width, height);
 
-    player.update(deltaT, gameInput, bullets);
-    player.draw(ctx);
+		player.update(deltaT, gameInput, bullets);
+		player.draw(ctx);
 
-    player.checkPlayerCollisions(player, objs);
+		//player.checkPlayerCollisions(player, objs);
 
-    utils.checkCollisions(objs);
+		utils.checkCollisions(objs);
 
-    objs.forEach((element) => {
-      element.update(deltaT);
-      element.draw(ctx);
-    });
+		objs.forEach((element) => {
+			element.update(deltaT);
+			element.draw(ctx);
+		});
 
-    bullets.forEach((element) => {
-      element.update(deltaT);
-      element.draw(ctx);
-    });
+		bullets.forEach((element) => {
+			element.update(deltaT);
+			element.draw(ctx);
+		});
 
-    // Bullet collisions and removal if offscreen
-    bulletCollisions(bullets, objs, width, height);
+		// Bullet collisions and removal if offscreen
+		//bulletCollisions(bullets, objs, width, height);
 
-    removeDestroyedObjects(objs);
+		removeDestroyedObjects(objs);
 
-    // Check if level is complete
-    //checkObjectives( objectives );
+		// Check if level is complete
+		//checkObjectives( objectives );
 
-    objectives = objectives.filter((ob) => !ob.markedForDestroy);
-    objectives.forEach((element) => {
-      let complete = element.checkIfComplete();
-      if (complete) {
-        objectives.pop();
-      }
-    });
+		objectives = objectives.filter((ob) => !ob.markedForDestroy);
+		objectives.forEach((element) => {
+			let complete = element.checkIfComplete();
+			if (complete) {
+				objectives.pop();
+			}
+		});
 
-    if (objectives.length < 1) {
-      //	console.log( 'level complete');
-      currentLevel++;
-      if (currentLevel > levels.length - 1) {
-        currentLevel = 0;
-        console.log("All levels complete");
-      }
-      loadLevel(currentLevel);
-    }
+		if (objectives.length < 1) {
+			//	console.log( 'level complete');
+			currentLevel++;
+			if (currentLevel > levels.length - 1) {
+				currentLevel = 0;
+				console.log("All levels complete");
+			}
+			loadLevel(currentLevel);
+		}
 
-    // Score
-    drawTextUpperLeft(
-      ctx,
-      scoreboard.toString(),
-      "yellow",
-      width,
-      height,
-      30,
-      true
-    );
-  }
+
+
+		// Score
+		showScoreboard();
+	}
 }
 
 // Load first level
@@ -164,45 +168,45 @@ setInterval(mainloop, 30);
 // make a json object containing key state, pass it into update functions along with the deltaT
 
 /* window.addEventListener(
-  "keydown",
-  function (event) {
-    if (event.defaultPrevented) {
-      return; // Do nothing if the event was already processed
-    }
+	"keydown",
+	function (event) {
+		if (event.defaultPrevented) {
+			return; // Do nothing if the event was already processed
+		}
 
-    switch (event.key) {
-      case "ArrowDown":
-        // code for "down arrow" key press.
-        //fire( player.position , player.forward() , 2 , player.velocity );
-        player.fire(bullets);
+		switch (event.key) {
+			case "ArrowDown":
+				// code for "down arrow" key press.
+				//fire( player.position , player.forward() , 2 , player.velocity );
+				player.fire(bullets);
 
-        break;
-      case "ArrowUp":
-        // code for "up arrow" key press.
-        player.thrust([0, -pwr]);
-        //ddd2.velocity = [ ddd2.velocity[0] + thrust[0] , ddd2.velocity[1] + thrust[1] ];
-        break;
-      case "ArrowLeft":
-        // code for "left arrow" key press.
-        player.rotateLeft();
+				break;
+			case "ArrowUp":
+				// code for "up arrow" key press.
+				player.thrust([0, -pwr]);
+				//ddd2.velocity = [ ddd2.velocity[0] + thrust[0] , ddd2.velocity[1] + thrust[1] ];
+				break;
+			case "ArrowLeft":
+				// code for "left arrow" key press.
+				player.rotateLeft();
 
-        break;
+				break;
 
-      case "ArrowRight":
-        // code for "right arrow" key press.
-        player.rotateRight();
-        break;
+			case "ArrowRight":
+				// code for "right arrow" key press.
+				player.rotateRight();
+				break;
 
-      case "Q":
-        console.log("q");
-        break;
+			case "Q":
+				console.log("q");
+				break;
 
-      default:
-        return; // Quit when this doesn't handle the key event.
-    }
+			default:
+				return; // Quit when this doesn't handle the key event.
+		}
 
-    // Cancel the default action to avoid it being handled twice
-    event.preventDefault();
-  },
-  true
+		// Cancel the default action to avoid it being handled twice
+		event.preventDefault();
+	},
+	true
 ); */

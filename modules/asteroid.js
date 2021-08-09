@@ -2,13 +2,14 @@ import { spaceobj } from "./spaceobj.js";
 import { rot , addVec } from "./utils/spaceUtils.js";
 import { scoreboard } from "./scoreboard.js";
 import * as utils from "./utils/spaceUtils.js";
+import { Vec2 } from "./utils/vec2.js";
 
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "yellow" ){
 
 	//	console.log(' asteroid created' );
 
-		super( objects , null , colour );
+		super( objects , null ,colour );
 		this.radius = radi;
 		this.colour = colour;
 		this.maxVariance = 14;
@@ -16,10 +17,11 @@ class asteroid extends spaceobj{
 
 		this.collisionRadius = radi + this.maxVariance/2;
 		this.canCollide = true;
+		this.collisionLayer = 3;
 		
 		this.angularVelocity = Math.random()*2;
 
-		this.wrap=true;
+		this.wrap=true;		
 	}
 
 	/* 
@@ -35,10 +37,11 @@ class asteroid extends spaceobj{
 		let ast = other instanceof asteroid;
 
 		if( ast ){
-			let diff = utils.difference( this.position , other.position);
-			let norm = utils.normalize( diff );
-			let mag = utils.mulVec(norm ,-1);
-			this.position = addVec( this.position , utils.mulVec( norm ,-1 ) );
+			let diff = this.position.sub( other.position );
+			diff.normalize();
+			let mag = diff.mul( 1 );
+
+			this.position = this.position.add( mag );
 			this.velocity = mag;
 		}
 	}
@@ -53,13 +56,16 @@ class asteroid extends spaceobj{
 				
 				if( rad > 10){
 
-					let divideAxis = utils.rot( utils.normalize(this.velocity) , 90* 3.14/180) ;
+					let axis = this.velocity.cpy();
+					
+					let div1 = axis.mul(  rad + 10 );
+					let div2 = axis.mul( -rad - 10 );
 					
 					// A small offset is needed to prevent divide by zero which makes the children dissapear
 					//[ rad/2+0.1 , 0]  [-rad/2-0.1 , 0]
 					//
-					this.createChild( utils.mulVec( divideAxis , rad/2 +1 ) );
-					this.createChild( utils.mulVec( divideAxis , -rad/2-1 )  );
+					this.createChild( div1 );
+					this.createChild( div2 );
 				}
 
 				scoreboard.add(1);
@@ -70,25 +76,21 @@ class asteroid extends spaceobj{
 
 	}
 
-	createChild( offset = [0,0] ){
+	createChild( offset ){
 		
 		let child = new asteroid( this.objects , this.radius/2 , this.colour);
 
-		child.position =  [ this.position[0] + offset[0]  , this.position[1] + offset[1]  ];
-		child.velocity =  [ this.velocity[0]  , this.velocity[1] ];
+		child.position =  new Vec2 ( this.position.x + offset.x  , this.position.y + offset.y  );
+		child.velocity =  this.velocity.cpy();
 
 		let randomMultiplier = 4;
 
-		let randomVelocity = [ -randomMultiplier/2 + Math.random()*randomMultiplier ,
-			 -randomMultiplier/2 + Math.random()*randomMultiplier ];
+		let randomVelocity = new Vec2 ( 
+			-randomMultiplier/2 + Math.random()*randomMultiplier ,
+			-randomMultiplier/2 + Math.random()*randomMultiplier );
 
-		child.velocity = addVec( child.velocity , randomVelocity );
-
-		//console.log( child.position )
-
-		this.objects.push( child );
-		
-		//console.log( this.objects );
+		child.velocity = child.velocity.add( randomVelocity );
+		this.objects.push( child );		
 	}
 
 	generateAstroid(){

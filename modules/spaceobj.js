@@ -1,10 +1,11 @@
 import { obj } from "./obj.js";
 import { rot, circleDefault } from "./utils/spaceUtils.js";
+import { Vec2 } from "./utils/vec2.js";
 
 class spaceobj extends obj {
   constructor(objects, myVerts, colour = "red", wrap = false) {
     super(objects, myVerts, colour);
-    this.velocity = [0, 0];
+    this.velocity = new Vec2(0,0);
     this.angularVelocity = 0;
     this.collisionRadius = 10;
     this.colour = colour;
@@ -15,7 +16,8 @@ class spaceobj extends obj {
   }
 
   forward() {
-    var ret = rot([0, 1], this.rotation);
+    let ret = new Vec2(0,1);
+	ret.rotate( this.rotation );
     return ret;
   }
 
@@ -42,11 +44,11 @@ class spaceobj extends obj {
   }
 
   updateRotation(deltaT) {
-    this.rotation += (this.angularVelocity * 3.14) / 180;
+    this.rotation += deltaT * (this.angularVelocity * 3.14) / 180;
   }
 
   updatePosition(deltaT) {
-    super.addPosition(this.velocity, this.wrap);
+    super.addPosition( this.velocity , this.wrap);
   }
 }
 
