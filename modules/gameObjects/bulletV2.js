@@ -17,7 +17,7 @@ export class BulletV2 extends obj{
 
 		this.damage = 5;
 
-		console.log( 'BulletV2' );
+		//console.log( 'BulletV2' );
 	}
 
 	update(){

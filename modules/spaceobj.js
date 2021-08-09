@@ -17,7 +17,7 @@ class spaceobj extends obj {
 
   forward() {
     let ret = new Vec2(0,1);
-	ret.rotate( this.rotation );
+	  ret.rotate( this.rotation );
     return ret;
   }
 

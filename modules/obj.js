@@ -40,12 +40,10 @@ class obj {
   addPosition(offset, wrap = false) {
     //this.position[0] += offset[0];
     //this.position[1] += offset[1];
-	this.position = this.position.add( offset );
-
-
+	  this.position = this.position.add( offset );
 
     if (wrap) {
-		this.position.wrap();
+		  this.position.wrap();
     }
   }
 
@@ -63,7 +61,7 @@ class obj {
       ctx,
       this.verts,
       this.rotation,
-      [this.position.x , this.position.y],
+      this.position.toArray(),
       this.color,
       wrap
     );

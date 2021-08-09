@@ -12,9 +12,9 @@ import { distance } from "./spaceUtils.js";
 export const collisionLayers = [
 	[1, 1, 0, 0, 1], //other, general case
 	[1, 1, 0, 1, 1], //player
-	[0, 0, 0, 1, 0], //playerbullet
-	[0, 1, 1, 1, 1], //asteroid
-	[1, 1, 0, 1, 0] //enemybullet
+	[0, 0, 0, 1, 1], //playerbullet
+	[0, 1, 1, 1, 0], //asteroid
+	[1, 1, 1, 0, 0] //enemybullet
 ];
 
 export const collisionLayerNames = {

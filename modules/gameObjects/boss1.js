@@ -22,17 +22,19 @@ export class Boss1 extends spaceobj{
 		this.collisionRadius = radius;
 		this.canCollide = true;
 
-		this.position= new Vec2(350 ,300)  ;
-		this.angularVelocity = 2.2 ;
-		this.velocity=new Vec2(0 ,0) ;
+		this.angularVelocity = 60.2 ;
+		this.position = new Vec2(350 ,300)  ;		
+		this.velocity = new Vec2(0 ,0) ;
 
 		console.log('boss');
 
-		this.fireSpeed = 4;
-		this.reloadTime = 0.3;
+		this.fireSpeed = 3;
+		this.reloadTime = 0.2;
 		this.isReloading = false;
 
 		this.wrap=true;
+
+		this.collisionLayer = 3;
 	}
 
 	setRadius( radius  ){
@@ -41,19 +43,19 @@ export class Boss1 extends spaceobj{
 		this.verts = nGon(5,radius);
 	}
 
-	update(){
-		super.update();
+	update( deltaT ){
+		super.update( deltaT );
 		this.fire();
 	}
 
 	fire() {
 		if (!this.isReloading) {
-			let b = new BulletV2(this.objects , 4);
+			let b = new BulletV2(this.objects , 10);
 			this.objects.push( b );
 			let forwardspeed = this.forward().mul( -this.fireSpeed );
 			b.velocity = this.velocity.cpy().add( forwardspeed );
 			b.position = this.position.cpy();
-			b.collisionLayer = 2;
+			b.collisionLayer = 4;
 			this.reload();
 		}
 	}
@@ -67,6 +69,7 @@ export class Boss1 extends spaceobj{
 
 	draw(ctx){
 		super.draw( ctx, this.wrap);
+		//utils.circleDefault(ctx , this.position.toArray() , this.collisionRadius , this.color);
 	}
 
 	onCollision(other) {}
@@ -81,6 +84,7 @@ export class Boss1 extends spaceobj{
 
 			if( this.hp<=10 ){
 				//scoreboard.add(1);
+				console.log('destroyed boss');
 				super.destroy();
 			}
 		}
