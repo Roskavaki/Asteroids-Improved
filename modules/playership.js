@@ -85,11 +85,18 @@ class playership extends spaceobj {
 
 	onCollision(other){
 		console.log("Player collision");
-		let diff = this.position.sub( other.position);
-		diff.normalize();
-		diff.mul(-1);
-		this.doDamage(5);
-		this.velocity = diff;
+		let norm = other.position.sub( this.position ).normalized();
+
+		let r =  norm.mul( 2*this.velocity.dot(norm) ).sub( this.velocity ).mul(-0.5);
+
+		let moveApart = other.collisionRadius + this.collisionRadius +1;
+		this.position = other.position.add( norm.mul( -moveApart )) ;
+
+		//utils.lineDefault(  )
+		this.velocity = r;//norm.mul( this.velocity.length() );
+		this.doDamage(2);
+		//this.velocity = this.velocity.mul(-1); //diff;
+
 	}
 
 	fire() {

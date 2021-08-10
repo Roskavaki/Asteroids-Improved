@@ -60,6 +60,12 @@ export class Vec2 {
   length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
+
+  distanceTo( other ){
+    let d = new Vec2( other.x-this.x , other.y-this.y );
+    return d.length();
+  }
+
   /**
    * returns a new normalized vector
    * @returns normalized version of this vector
@@ -139,4 +145,5 @@ export class Vec2 {
   static right() {
     return new Vec2(-1, 0);
   }
+
 }

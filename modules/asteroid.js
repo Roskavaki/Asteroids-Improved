@@ -6,9 +6,6 @@ import { Vec2 } from "./utils/vec2.js";
 
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "yellow" ){
-
-	//	console.log(' asteroid created' );
-
 		super( objects , null ,colour );
 		this.radius = radi;
 		this.colour = colour;
@@ -21,7 +18,9 @@ class asteroid extends spaceobj{
 		
 		this.angularVelocity = Math.random()*2;
 
-		this.wrap=true;		
+		this.wrap=true;
+
+		this.collisionDisabledWith = null;
 	}
 
 	/* 
@@ -34,15 +33,22 @@ class asteroid extends spaceobj{
 
 	onCollision( other ){
 		// Type of other object
-		let ast = other instanceof asteroid;
 
-		if( ast ){
-			let diff = this.position.sub( other.position );
-			diff.normalize();
-			let mag = diff.mul( 1 );
+		if( other!== null ){
+			let ast = other instanceof asteroid;
 
-			this.position = this.position.add( mag );
-			this.velocity = mag;
+			//let otherIsBrother = (other === this.collisionDisabledWith);
+
+			//console.log( otherIsBrother )
+
+			if( ast  ){
+				let diff = this.position.sub( other.position );
+				diff.normalize();
+				let mag = diff.mul( 1 );
+
+				this.position = this.position.add( mag.mul(2) );
+				this.velocity = mag;
+			}			
 		}
 	}
 
@@ -57,15 +63,16 @@ class asteroid extends spaceobj{
 				if( rad > 10){
 
 					let axis = this.velocity.cpy();
-					
-					let div1 = axis.mul(  rad + 10 );
-					let div2 = axis.mul( -rad - 10 );
+					axis.rotDegrees( 90 );
+					let div1 = axis.mul(  rad/2 );
+					let div2 = axis.mul( -rad/2  );
 					
 					// A small offset is needed to prevent divide by zero which makes the children dissapear
 					//[ rad/2+0.1 , 0]  [-rad/2-0.1 , 0]
 					//
-					this.createChild( div1 );
-					this.createChild( div2 );
+					let c1 = this.createChild( div1 );
+					let c2 = this.createChild( div2 , c1 );
+					c1.collisionDisabledWith = c2;
 				}
 
 				scoreboard.add(1);
@@ -76,21 +83,39 @@ class asteroid extends spaceobj{
 
 	}
 
-	createChild( offset ){
-		
+	delayedEnableBrotherCollision(){
+		this.canCollide=false;
+		setTimeout(()=>{
+			this.canCollide=true;
+			this.collisionDisabledWith = null;
+		}, 1000);
+	}
+
+	createChild( offset , collisionDisabledWith=null ){		
 		let child = new asteroid( this.objects , this.radius/2 , this.colour);
 
-		child.position =  new Vec2 ( this.position.x + offset.x  , this.position.y + offset.y  );
+		child.position =  new Vec2 ( this.position.x + offset.x + Math.random()*0.1  , this.position.y + offset.y  );
 		child.velocity =  this.velocity.cpy();
 
-		let randomMultiplier = 4;
+
+		let randomMultiplier = 1;
 
 		let randomVelocity = new Vec2 ( 
 			-randomMultiplier/2 + Math.random()*randomMultiplier ,
 			-randomMultiplier/2 + Math.random()*randomMultiplier );
 
+		//let axis = this.velocity.normalized().mul( Math.random() * randomMultiplier );
+		//axis.rotDegrees( 90 );
+
 		child.velocity = child.velocity.add( randomVelocity );
-		this.objects.push( child );		
+
+		child.delayedEnableBrotherCollision();
+
+		child.collisionDisabledWith = collisionDisabledWith;
+
+		this.objects.push( child );
+
+		return child;
 	}
 
 	generateAstroid(){

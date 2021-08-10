@@ -87,7 +87,7 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 		let p1 = [objectA.position.x , objectA.position.y];
 		let p2 = [objectB.position.x , objectB.position.y];
 		if( checkInsideCircle( p1  , p2 , totalRadius )){
-			console.log( 'collision' );
+			//console.log( 'collision' );
 			return true;
 		}
 	}

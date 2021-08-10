@@ -49,7 +49,7 @@ let pause = false;
 
 let currentLevel = 0;
 //
-let levels = [bosslevel.createLevel(),  level1.createLevel() , level2, lastlevel.createLevel()];
+let levels = [ level1.createLevel() , level2, bosslevel.createLevel(),  lastlevel.createLevel()];
 
 let date = new Date();
 let currentTime = date.getTime();

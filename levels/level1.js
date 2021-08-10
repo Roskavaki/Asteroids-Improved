@@ -12,7 +12,7 @@ function createLevel() {
 
 	const a1 = new asteroid(objs, 32, "yellow");
 	a1.position = new Vec2( 100, 100);
-	a1.velocity = new Vec2( 0, 0.5 );
+	a1.velocity = new Vec2( 0, 1.5 );
 	a1.objectName = "a1";
 
 	const a2 = new asteroid(objs, 32, "yellow");
