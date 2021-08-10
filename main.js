@@ -29,6 +29,8 @@ const canvas = document.getElementById("canvas");
 // Disable canvas alpha, for optimization
 const ctx = canvas.getContext("2d", { alpha: false });
 
+let gameInput = new Input(window);
+
 ctx.fillStyle = "green";
 let width = canvas.width;
 let height = canvas.height;
@@ -37,7 +39,7 @@ let objs = [];
 let bullets = [];
 let objectives = [];
 
-let player = new playership(objs, tri, "yellow");
+let player = new playership(objs, gameInput, "yellow");
 player.position = new Vec2( width / 2, height / 2 + 60);
 
 
@@ -53,7 +55,7 @@ let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
 
-let gameInput = new Input(window);
+
 //let levels =  [  lastlevel.createLevel() ];
 
 function loadLevel(ind) {
@@ -63,7 +65,7 @@ function loadLevel(ind) {
 
 	player.objects = objs;
 
-//	objs.push( player );
+	objs.push( player );
 }
 
 function removeDestroyedObjects(objs) {
@@ -80,21 +82,6 @@ function showScoreboard(){
 	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, true );
 }
 
-function bulletCollisions(bullets, objs, width, height) {
-	// Bullet collisions and removal if offscreen
-	for (var i = bullets.length - 1; i > -1; i--) {
-		let bullet = bullets[i];
-		let collision = utils.checkCollisionsOneToMany(bullet, objs);
-
-		if (utils.checkOutOfBounds( [bullet.position.x , bullet.position.y] , width, height)) {
-			bullets.splice(i, 1);
-		} else if (collision) {
-			bullets.splice(i, 1);
-			bullet.onCollision(collision);
-		}
-	}
-}
-
 // Main game loop to draw each frame
 function mainloop() {
 	//ctx.clearRect(0, 0, width, height);
@@ -109,11 +96,6 @@ function mainloop() {
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, width, height);
 
-		player.update(deltaT, gameInput, bullets);
-		player.draw(ctx);
-
-		//player.checkPlayerCollisions(player, objs);
-
 		utils.checkCollisions(objs);
 
 		objs.forEach((element) => {
@@ -121,19 +103,9 @@ function mainloop() {
 			element.draw(ctx);
 		});
 
-		bullets.forEach((element) => {
-			element.update(deltaT);
-			element.draw(ctx);
-		});
-
-		// Bullet collisions and removal if offscreen
-		//bulletCollisions(bullets, objs, width, height);
-
 		removeDestroyedObjects(objs);
-
-		// Check if level is complete
-		//checkObjectives( objectives );
-
+		
+		//Objectives need work, only 1 per level atm
 		objectives = objectives.filter((ob) => !ob.markedForDestroy);
 		objectives.forEach((element) => {
 			let complete = element.checkIfComplete();
@@ -151,8 +123,6 @@ function mainloop() {
 			}
 			loadLevel(currentLevel);
 		}
-
-
 
 		// Score
 		showScoreboard();

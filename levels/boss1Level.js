@@ -17,6 +17,7 @@ function createLevel() {
   	
 	const txt = new ShrinkingText("Boss!");
 
+
 	const objective = new DestroyParticularObject( boss );
 	let objectives = [ objective ];	
 

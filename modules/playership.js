@@ -7,9 +7,11 @@ import { Vec2 } from "./utils/vec2.js";
 import { BulletV2 } from "./gameObjects/bulletV2.js";
 
 class playership extends spaceobj {
-	constructor(objects, myVerts = null, colour = "red") {
+	constructor(objects, input, colour = "red") {
 		super(objects, tri, colour);
-		this.verts = tri;
+		//this.verts =  myVerts;
+
+		this.input = input;
 
 		this.canCollide = true;
 		this.collisionLayer = 1;
@@ -55,7 +57,8 @@ class playership extends spaceobj {
 		}
 	}
 
-	update(deltaT, input, bullets) {
+	update( deltaT ) {
+		let input = this.input;
 		if (input.getKey("W")) {
 			var thrust = this.forward().mul(-0.1);
 
@@ -74,22 +77,19 @@ class playership extends spaceobj {
 		}
 
 		if (input.getKey(32)) {
-			this.fire(bullets);
+			this.fire();
 		}
 
 		super.updatePosition(deltaT);
 	}
 
-	checkPlayerCollisions(player = this, others = []) {
-		let collision = utils.checkCollisionsOneToMany(player, others);
-		if (collision) {
-			console.log("Player collision");
-			let diff = utils.difference(player.position, collision.position);
-			let norm = utils.normalize(diff);
-			let mag  = utils.mulVec(norm, -2);
-			player.doDamage(5);
-			player.velocity = mag;
-		}
+	onCollision(other){
+		console.log("Player collision");
+		let diff = this.position.sub( other.position);
+		diff.normalize();
+		diff.mul(-1);
+		this.doDamage(5);
+		this.velocity = diff;
 	}
 
 	fire() {
