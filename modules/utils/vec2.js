@@ -52,6 +52,11 @@ export class Vec2 {
 	  return new Vec2(this.x*other.w - this.w*other.y, this.w*other.x - this.x*other.z, this.x*other.y - this.y*other.x);
   } */
 
+
+  reflect( normal ){
+    return  normal.mul( 2*this.dot(normal) ).sub( this );
+  }
+
   // util functions
   /**
    * length of the vector
@@ -102,10 +107,24 @@ export class Vec2 {
     this.rotate( theta * Math.PI/180 );
   }
 
+  /**
+   * Copy the current vector
+   * @returns a new vector with the same x,y
+   */
   cpy(){
     return new Vec2( this.x , this.y );
   }
 
+  /** Updates the current vector to the x and y of the input arg */
+  apply( newPos ){
+    this.x=newPos.x;
+    this.y=newPos.y;
+  }
+
+  /**
+   * Get the vector as an array.
+   * @returns array [x,y]
+   */
   toArray(){
     return [this.x , this.y];
   }

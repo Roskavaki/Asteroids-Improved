@@ -50,8 +50,8 @@ function drawTextCenterScreen( ctx ,txt ,  width=100 , height=100 , fontSize=30 
  * @param {*} fontSize 
  * @param {*} fill 
  */
-function drawTextUpperLeft( ctx ,txt , colour="red" ,  width=0 , height=0 , fontSize=30 , fill=false ){
-	drawText(ctx , 0 , 0 , txt, colour , fontSize , 'left' , 'top' , 'serif' , fill );
+function drawTextUpperLeft( ctx ,txt , colour="red" ,  width=0 , height=0 , fontSize=30 , fill=false , font='serif'){
+	drawText(ctx , 0 , 0 , txt, colour , fontSize , 'left' , 'top' , font , fill );
 }
 
 

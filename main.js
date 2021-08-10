@@ -79,7 +79,8 @@ function removeDestroyedObjects(objs) {
 }
 
 function showScoreboard(){
-	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, true );
+	const fill = false;
+	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, fill , "biting" );
 }
 
 // Main game loop to draw each frame

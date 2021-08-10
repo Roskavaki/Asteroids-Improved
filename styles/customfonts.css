@@ -6,9 +6,30 @@
         url('../fonts/biting-my-nails/BITING.TTF') ;
 }
 
+@font-face {
+    font-family: 'moonhouse';
+    src: local('moonhouse'),
+        url('../fonts/moonhouse-font/Moonhouse-yE5M.ttf') ;
+}
 
+@font-face {
+    font-family: 'screamingNeon';
+    src: local('screamingNeon'),
+        url('../fonts/screaming-neon-font/ScreamingNeon-x33J0.ttf') ;
+}
+
+@font-face {
+    font-family: 'timer';
+    src: local('timer'),
+        url('../fonts/cursed-timer-ulil-font/CursedTimerUlil-Aznm.ttf') ;
+}
 
 .font3{
 	font-family: biting;
 	font-size: 40px;
+}
+
+.font-Moonhouse{
+    font-family: moonhouse;
+	font-size: 24px;
 }
