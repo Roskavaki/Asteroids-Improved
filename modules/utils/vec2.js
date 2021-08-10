@@ -47,10 +47,23 @@ export class Vec2 {
   dot(other) {
     return this.x * other.x + this.y * other.y;
   }
-  //idk why you would need this though
-  /* cross(other) {
-	  return new Vec2(this.x*other.w - this.w*other.y, this.w*other.x - this.x*other.z, this.x*other.y - this.y*other.x);
-  } */
+
+  /**
+   * gets the scalar magnitude of the cross-product between this vec2 and other vec2
+   * @param {vec2d} other other vector2
+   * @returns scalar magnitude of the cross product
+   */
+  cross(other) {
+    return this.x * other.y - this.y * other.x;
+  }
+
+  /**
+   * gives a vector perpendicular to this one
+   * @returns perpendicular vector
+   */
+  perpendicular() {
+    return new Vec2(this.y, -this.x);
+  }
 
   // util functions
   /**
@@ -78,50 +91,48 @@ export class Vec2 {
 
   /**
    * Rotate this vector theta radians
-   * @param {*} theta 
+   * @param {*} theta
    */
-  rotate( theta ){
-    let cos = Math.cos( theta );
-    let sin = Math.sin( theta );
+  rotate(theta) {
+    let cos = Math.cos(theta);
+    let sin = Math.sin(theta);
     let x = this.x;
     let y = this.y;
-    let xp = x*cos - y*sin;
-    let yp = x*sin + y*cos;
-    this.x=xp;
-    this.y=yp;
+    let xp = x * cos - y * sin;
+    let yp = x * sin + y * cos;
+    this.x = xp;
+    this.y = yp;
     //return  new Vec2( xp, yp );
   }
-  
-  rotDegrees( theta ){
-    this.rotate( theta * Math.PI/180 );
+
+  rotDegrees(theta) {
+    this.rotate((theta * Math.PI) / 180);
   }
 
-  cpy(){
-    return new Vec2( this.x , this.y );
+  cpy() {
+    return new Vec2(this.x, this.y);
   }
 
-  toArray(){
-    return [this.x , this.y];
+  toArray() {
+    return [this.x, this.y];
   }
 
-  wrap( width=700 , height=700 ){
+  wrap(width = 700, height = 700) {
     let x = this.x;
     let y = this.y;
 
-    if( x<0 ){
+    if (x < 0) {
       x = x + width;
-    }
-    else if( x>= width ){
+    } else if (x >= width) {
       x = x - width;
     }
-  
-    if( y<0 ){
+
+    if (y < 0) {
       y = y + height;
-    }
-    else if( y >= height ){
+    } else if (y >= height) {
       y = y - height;
     }
-  
+
     this.x = x;
     this.y = y;
   }
