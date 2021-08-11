@@ -22,4 +22,6 @@ export class DestroyParticularObject{
 
 		return false;
 	}
+
+	onStart(){}
 }

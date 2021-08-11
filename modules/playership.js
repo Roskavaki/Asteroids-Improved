@@ -1,7 +1,4 @@
 import { spaceobj } from "./spaceobj.js";
-import { rot } from "./utils/spaceUtils.js";
-import { bullet } from "./bullet.js";
-import * as utils from "./utils/spaceUtils.js";
 import { tri } from "./shapes.js";
 import { Vec2 } from "./utils/vec2.js";
 import { BulletV2 } from "./gameObjects/bulletV2.js";
@@ -27,6 +24,8 @@ class playership extends spaceobj {
 
 		this.reloadTime = 0.25;
 		this.isReloading = false;
+
+		this.maxHp = this.hp;
 	}
 
 	draw(ctx) {
@@ -57,6 +56,11 @@ class playership extends spaceobj {
 		}
 	}
 
+	onStart(){
+		console.log( 'Player start');
+		this.hp = this.maxHp;
+	}
+
 	update( deltaT ) {
 		let input = this.input;
 		if (input.getKey("W")) {
@@ -85,6 +89,7 @@ class playership extends spaceobj {
 
 	onCollision(other){
 		console.log("Player collision");
+		//console.log( other );
 		let norm = other.position.sub( this.position ).normalized();
 
 		let r =  norm.mul( 2*this.velocity.dot(norm) ).sub( this.velocity ).mul(-0.5);

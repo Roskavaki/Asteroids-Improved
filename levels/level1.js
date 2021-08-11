@@ -28,7 +28,7 @@ function createLevel() {
 	objs.push(a1, a2, txt);
 
 	let level = {
-		levelname: "Level 0",
+		levelname: "Level 1",
 		objects: objs,
 		objectives: objectives,
 	};

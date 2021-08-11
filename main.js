@@ -1,9 +1,6 @@
-import { spaceobj } from "./modules/spaceobj.js";
 import { playership } from "./modules/playership.js";
-import { bullet } from "./modules/bullet.js";
-import { sqr, tri } from "./modules/shapes.js";
 import * as utils from "./modules/utils/spaceUtils.js";
-
+import { scoreboard } from "./modules/scoreboard.js";
 import { Vec2 } from "./modules/utils/vec2.js";
 
 import {
@@ -13,16 +10,13 @@ import {
 } from "./modules/utils/textUtils.js";
 import { Input } from "./modules/input.js";
 
-import { asteroid } from "./modules/asteroid.js";
-
 import * as level1 from "./levels/level1.js";
-import { level2 } from "./levels/level2.js";
+import * as level2 from "./levels/level2.js";
 
-import * as lastlevel from "./levels/victoryLevel.js";
-
-import { scoreboard } from "./modules/scoreboard.js";
 
 import * as bosslevel from "./levels/boss1Level.js";
+import * as victoryLevel from "./levels/victoryLevel.js";
+import * as defeatLevel from "./levels/defeatLevel.js";
 
 const canvas = document.getElementById("canvas");
 
@@ -49,8 +43,7 @@ let pause = false;
 
 let currentLevel = 0;
 //
-let levels = [ level1.createLevel() , level2, bosslevel.createLevel(),  lastlevel.createLevel()];
-
+let levels = [ level1 , level2, bosslevel,  victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
@@ -58,15 +51,42 @@ let lastTime = currentTime;
 
 //let levels =  [  lastlevel.createLevel() ];
 
-function loadLevel(ind) {
-	let lvl = levels[ind];
+function loadDefeatLevel(){	
+	loadLevel( defeatLevel );
+	currentLevel = -1;  // -1 Because the defeat level is not actually in the array
+}
+
+function loadLevelIndex(ind) {
+	console.log( 'loading level: '+ind);
+	loadLevel( levels[ind] );
+}
+
+function loadLevel( level ){
+	let lvl = level.createLevel();
 	objs       = lvl.objects;
 	objectives = lvl.objectives;
 
 	player.objects = objs;
+	player.position = new Vec2( width / 2, height / 2 + 120);
+	player.velocity = Vec2.zero();
 
 	objs.push( player );
+
+	console.log( objs );
+
+	// Run the start function on each gameobject as soon as the level starts.
+	// Note: not the same as the constructor because levels are created long before they
+	// Are loaded into the game world.
+	objs.forEach(ob => {
+		ob.onStart();
+	});
+
+	// Start all objectives
+	objectives.forEach(ob => {
+		ob.onStart();
+	});
 }
+
 
 function removeDestroyedObjects(objs) {
 	// Object removal,  do not use filter
@@ -91,8 +111,7 @@ function mainloop() {
 	lastTime = currentTime;
 	currentTime = date.getTime();
 	let deltaT = (currentTime - lastTime) / 1000;
-	// console.log(currentTime);
-
+	
 	if (!pause) {
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, width, height);
@@ -115,23 +134,30 @@ function mainloop() {
 			}
 		});
 
+		// Load next level if objectives complete
 		if (objectives.length < 1) {
-			//	console.log( 'level complete');
+			console.log( 'level add');
+
 			currentLevel++;
 			if (currentLevel > levels.length - 1) {
 				currentLevel = 0;
 				console.log("All levels complete");
 			}
-			loadLevel(currentLevel);
+			loadLevelIndex(currentLevel);
 		}
 
 		// Score
 		showScoreboard();
+
+		// Defeat if player died
+		if( player.hp <=0 ){
+			loadDefeatLevel();
+		}		
 	}
 }
 
 // Load first level
-loadLevel(currentLevel);
+loadLevelIndex(currentLevel);
 
 // Start the main loop
 setInterval(mainloop, 30);

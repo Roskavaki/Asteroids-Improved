@@ -16,6 +16,8 @@ class NonCompletable{
 		
 		return false;
 	}
+
+	onStart(){}
 }
 
 export { NonCompletable }

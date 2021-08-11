@@ -75,6 +75,12 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
  * @returns true if A and B have collided
  */
  function checkCollision( objectA , objectB ){
+
+	if(  objectA === objectB ){
+		console.error( "object is colliding with itself" );
+		return false;
+	}
+
 	let layerA = objectA.collisionLayer;
 	let layerB = objectB.collisionLayer;
 

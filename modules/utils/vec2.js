@@ -164,5 +164,8 @@ export class Vec2 {
   static right() {
     return new Vec2(-1, 0);
   }
+  static zero() {
+    return new Vec2(0, 0);
+  }
 
 }

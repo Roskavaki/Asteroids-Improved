@@ -24,6 +24,8 @@ class DestroyAllAsteroids{
 
 		return false;
 	}
+
+	onStart(){}
 }
 
 export { DestroyAllAsteroids }

@@ -37,6 +37,8 @@ class obj {
 
   onCollision(other) {}
 
+  onStart(inp){}
+
   addPosition(offset, wrap = false) {
     //this.position[0] += offset[0];
     //this.position[1] += offset[1];
