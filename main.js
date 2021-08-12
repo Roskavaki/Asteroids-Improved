@@ -7,9 +7,9 @@ import * as utils from "./modules/utils/spaceUtils.js";
 import { Vec2 } from "./modules/utils/vec2.js";
 
 import {
-	drawText,
-	drawTextCenterScreen,
-	drawTextUpperLeft,
+  drawText,
+  drawTextCenterScreen,
+  drawTextUpperLeft,
 } from "./modules/utils/textUtils.js";
 import { Input } from "./modules/input.js";
 
@@ -23,6 +23,8 @@ import * as lastlevel from "./levels/victoryLevel.js";
 import { scoreboard } from "./modules/scoreboard.js";
 
 import * as bosslevel from "./levels/boss1Level.js";
+
+import { Particle } from "./modules/physics/xpbd.js";
 
 const canvas = document.getElementById("canvas");
 
@@ -40,93 +42,119 @@ let bullets = [];
 let objectives = [];
 
 let player = new playership(objs, gameInput, "yellow");
-player.position = new Vec2( width / 2, height / 2 + 60);
-
-
+player.position = new Vec2(width / 2, height / 2 + 60);
 
 // Pause rendering and game logic
 let pause = false;
 
 let currentLevel = 0;
 //
-let levels = [bosslevel.createLevel(),  level1.createLevel() , level2, lastlevel.createLevel()];
+let levels = [
+  bosslevel.createLevel(),
+  level1.createLevel(),
+  level2,
+  lastlevel.createLevel(),
+];
 
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
 
+let particles = [
+  new Particle(0, 1, new Vec2(50, 50), new Vec2(0, 0)),
+  new Particle(1, 1, new Vec2(100, 100), new Vec2(0, 0)),
+];
+
+let gravity = new Vec2(0, 9.81);
+
+particles[0].addForce(gravity);
+particles[1].addForce(gravity);
 
 //let levels =  [  lastlevel.createLevel() ];
 
 function loadLevel(ind) {
-	let lvl = levels[ind];
-	objs       = lvl.objects;
-	objectives = lvl.objectives;
+  let lvl = levels[ind];
+  objs = lvl.objects;
+  objectives = lvl.objectives;
 
-	player.objects = objs;
+  player.objects = objs;
 
-	objs.push( player );
+  objs.push(player);
 }
 
 function removeDestroyedObjects(objs) {
-	// Object removal,  do not use filter
-	for (var i = objs.length - 1; i >= 0; i--) {
-		var obj = objs[i];
-		if (obj.markedForDestroy) {
-			objs.splice(i, 1);
-		}
-	}
+  // Object removal,  do not use filter
+  for (var i = objs.length - 1; i >= 0; i--) {
+    var obj = objs[i];
+    if (obj.markedForDestroy) {
+      objs.splice(i, 1);
+    }
+  }
 }
 
-function showScoreboard(){
-	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, true );
+function showScoreboard() {
+  drawTextUpperLeft(
+    ctx,
+    scoreboard.toString(),
+    "yellow",
+    width,
+    height,
+    30,
+    true
+  );
 }
 
 // Main game loop to draw each frame
 function mainloop() {
-	//ctx.clearRect(0, 0, width, height);
+  //ctx.clearRect(0, 0, width, height);
 
-	date = new Date();
-	lastTime = currentTime;
-	currentTime = date.getTime();
-	let deltaT = (currentTime - lastTime) / 1000;
-	// console.log(currentTime);
+  date = new Date();
+  lastTime = currentTime;
+  currentTime = date.getTime();
+  let deltaT = (currentTime - lastTime) / 1000;
+  // console.log(currentTime);
 
-	if (!pause) {
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, width, height);
+  if (!pause) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, width, height);
 
-		utils.checkCollisions(objs);
+    utils.checkCollisions(objs);
 
-		objs.forEach((element) => {
-			element.update(deltaT);
-			element.draw(ctx);
-		});
+    Particle.particleLoop(particles, deltaT);
+    particles.forEach((element) => {
+      // element.update(deltaT);
+      element.draw(ctx);
+    });
 
-		removeDestroyedObjects(objs);
-		
-		//Objectives need work, only 1 per level atm
-		objectives = objectives.filter((ob) => !ob.markedForDestroy);
-		objectives.forEach((element) => {
-			let complete = element.checkIfComplete();
-			if (complete) {
-				objectives.pop();
-			}
-		});
+    objs.forEach((element) => {
+      element.update(deltaT);
+      element.draw(ctx);
+    });
 
-		if (objectives.length < 1) {
-			//	console.log( 'level complete');
-			currentLevel++;
-			if (currentLevel > levels.length - 1) {
-				currentLevel = 0;
-				console.log("All levels complete");
-			}
-			loadLevel(currentLevel);
-		}
+    removeDestroyedObjects(objs);
 
-		// Score
-		showScoreboard();
-	}
+    //Objectives need work, only 1 per level atm
+    objectives = objectives.filter((ob) => !ob.markedForDestroy);
+    objectives.forEach((element) => {
+      let complete = element.checkIfComplete();
+      if (complete) {
+        objectives.pop();
+      }
+    });
+
+    if (objectives.length < 1) {
+      //	console.log( 'level complete');
+      currentLevel++;
+      if (currentLevel > levels.length - 1) {
+        currentLevel = 0;
+        console.log("All levels complete");
+      }
+      loadLevel(currentLevel);
+    }
+
+    // Score
+    showScoreboard();
+  }
 }
 
 // Load first level

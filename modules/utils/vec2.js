@@ -89,6 +89,10 @@ export class Vec2 {
     this.y = this.y / this.length();
   }
 
+  distanceTo(other) {
+    return this.sub(other).length();
+  }
+
   /**
    * Rotate this vector theta radians
    * @param {*} theta
