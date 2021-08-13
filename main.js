@@ -61,14 +61,16 @@ let currentTime = date.getTime();
 let lastTime = currentTime;
 
 let particles = [
-  new Particle(0, 1, new Vec2(50, 50), new Vec2(0, 0)),
-  new Particle(1, 1, new Vec2(100, 100), new Vec2(0, 0)),
+  new Particle(0, 1, new Vec2(150, 100), new Vec2(0, 0)),
+  new Particle(1, 1, new Vec2(150, 200), new Vec2(0, 0)),
 ];
 
-let gravity = new Vec2(0, 9.81);
+let gravity = new Vec2(0, 3);
 
 particles[0].addForce(gravity);
-particles[1].addForce(gravity);
+
+particles[1].addForce(new Vec2(0, -3));
+// particles[1].addForce(gravity);
 
 //let levels =  [  lastlevel.createLevel() ];
 
@@ -122,6 +124,8 @@ function mainloop() {
 
     Particle.particleLoop(particles, deltaT);
     particles.forEach((element) => {
+      // let air_resis = new Vec2(0, -0.2 * element.velocity.y);
+      // element.addForce(air_resis);
       // element.update(deltaT);
       element.draw(ctx);
     });

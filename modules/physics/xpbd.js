@@ -24,7 +24,8 @@ export class Particle {
     id,
     mass = 1,
     position = new Vec2(0, 0),
-    velocity = new Vec2(0, 0)
+    velocity = new Vec2(0, 0),
+    radius = 50
   ) {
     this.id = id;
     this.mass = mass;
@@ -33,6 +34,8 @@ export class Particle {
 
     this.previousPos = position;
     this.extForce = new Vec2(0, 0);
+
+    this.radius = radius;
   }
 
   draw(ctx, wrap = false) {
@@ -49,12 +52,13 @@ export class Particle {
   }
 
   addForce(force) {
-    this.extForce.add(force);
+    this.extForce = this.extForce.add(force);
   }
 
   // while simulating, call this
   static particleLoop(particles, deltaT, numSubSteps = 5, numPosIters = 1) {
-    // var colPairs = CollectCollisionPairs(particles, deltaT);
+    var colPairs = this.CollectCollisionPairs(particles, deltaT);
+    // console.log(colPairs);
     var h = deltaT / numSubSteps;
     for (var i = 0; i < numSubSteps; i++) {
       for (var j = 0; j < particles.length; j++) {
@@ -62,11 +66,13 @@ export class Particle {
         // console.log(p.id);
         p.previousPos = p.position;
         p.velocity = p.velocity.add(p.extForce.mul(h / p.mass));
+        // console.log(p.extForce);
         p.position = p.position.add(p.velocity.mul(h));
+        p.position = utils.wrapCoordinates2(p.position.toArray(), 700, 700);
       }
       for (var j = 0; j < numPosIters; j++) {
         // this.SolvePositions();
-        // handlePotentialCollisions(particles, colPairs, h);
+        this.handlePotentialCollisions(particles, colPairs, h);
       }
       for (var j = 0; j < particles.length; j++) {
         let p = particles[j];
@@ -82,13 +88,23 @@ export class Particle {
     var pairs = {};
     for (var i = 0; i < particles.length; i++) {
       let p1 = particles[i];
-      var boundBox = safety * deltaT * p1.velocity.length(); // might want to add particle.radius to this at some point
+      var boundBox = 10 + safety * deltaT * p1.velocity.length(); // might want to add particle.radius to this at some point
       for (var j = 0; j < particles.length; j++) {
         let p2 = particles[j];
+
         if (p1.id == p2.id) continue; //dont pairs with self
+        // console.log("p1=" + p1.id + " p2=" + p2.id + " box =" + boundBox);
         // guess its more of a circle for now
         //is in distance and not a duplicate
-        if (p1.position.distanceTo(p2) <= boundBox && pairs[p2.id] != p1.id) {
+
+        // console.log(p1.position.distanceTo(p2.position));
+        if (
+          p1.position.distanceTo(p2.position) <= boundBox &&
+          (pairs[p2.id] != p1.id ||
+            pairs[p2.id] == null ||
+            pairs[p2.id] == null)
+        ) {
+          // console.log("here");
           pairs[p1.id] = p2.id; //perhaps there's a more efficient format?
         }
       }
@@ -103,17 +119,24 @@ export class Particle {
       let p1 = this.getParticleById(key, particles);
       let p2 = this.getParticleById(value, particles);
 
-      var contactNormal = new Vec2(0, 0); //n in the paper, how do we get this?
-      var penetration = p1.position.sub(p2.position).dot(contactNormal);
+      console.log(p1.id + " " + p2.id);
 
-      //if we dpnt actually contact, go to the next pair
+      var contactNormal = p2.position.sub(p1.position).normalized(); //n in the paper, how do we get this?
+      // for now, since its just circles:
+      //var penetration = p1.position.sub(p2.position).dot(contactNormal);
+      var penetration =
+        p1.radius + p2.radius - p2.position.sub(p1.position).dot(contactNormal);
+
+      console.log(penetration);
+
+      //if we dont actually contact, go to the next pair
       if (penetration <= 0) continue;
       // handle the contact
       this.handlePosConstraint(p1, p2, h, contactNormal.mul(penetration), 0);
       //apply static friction
-      var dp = p1.position
+      /* var dp = p1.position
         .sub(p1.previousPos)
-        .sub(p2.position.sub(p2.previousPos));
+        .sub(p2.position.sub(p2.previousPos)); */
     }
   }
 
