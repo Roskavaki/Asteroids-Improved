@@ -62,7 +62,7 @@ let lastTime = currentTime;
 
 let particles = [
   new Particle(0, 1, new Vec2(150, 100), new Vec2(0, 0)),
-  new Particle(1, 1, new Vec2(150, 200), new Vec2(0, 0)),
+  new Particle(1, 1, new Vec2(200, 200), new Vec2(0, 0), 50, "white"),
 ];
 
 let gravity = new Vec2(0, 3);

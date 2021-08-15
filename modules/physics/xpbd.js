@@ -25,7 +25,8 @@ export class Particle {
     mass = 1,
     position = new Vec2(0, 0),
     velocity = new Vec2(0, 0),
-    radius = 50
+    radius = 50,
+    colour = "yellow"
   ) {
     this.id = id;
     this.mass = mass;
@@ -34,12 +35,12 @@ export class Particle {
 
     this.previousPos = position;
     this.extForce = new Vec2(0, 0);
-
+    this.colour = colour;
     this.radius = radius;
   }
 
   draw(ctx, wrap = false) {
-    utils.circleDefault(ctx, this.position.toArray(), 50, "yellow");
+    utils.circleDefault(ctx, this.position.toArray(), this.radius, this.colour);
 
     /*utils.drawVerts(
       ctx,
@@ -68,7 +69,7 @@ export class Particle {
         p.velocity = p.velocity.add(p.extForce.mul(h / p.mass));
         // console.log(p.extForce);
         p.position = p.position.add(p.velocity.mul(h));
-        p.position = utils.wrapCoordinates2(p.position.toArray(), 700, 700);
+
       }
       for (var j = 0; j < numPosIters; j++) {
         // this.SolvePositions();
@@ -76,7 +77,8 @@ export class Particle {
       }
       for (var j = 0; j < particles.length; j++) {
         let p = particles[j];
-        p.velocity = p.position.sub(p.previousPos).div(h);
+        p.velocity = p.position.sub(p.previousPos).div(h); // make sure to wrap after this
+        p.position = utils.wrapCoordinates2(p.position.toArray(), 700, 700);
       }
     }
   }
@@ -88,7 +90,8 @@ export class Particle {
     var pairs = {};
     for (var i = 0; i < particles.length; i++) {
       let p1 = particles[i];
-      var boundBox = 10 + safety * deltaT * p1.velocity.length(); // might want to add particle.radius to this at some point
+      var boundBox = safety * p1.radius + safety * deltaT * p1.velocity.length(); // might want to add particle.radius to this at some point
+
       for (var j = 0; j < particles.length; j++) {
         let p2 = particles[j];
 
@@ -119,15 +122,15 @@ export class Particle {
       let p1 = this.getParticleById(key, particles);
       let p2 = this.getParticleById(value, particles);
 
-      console.log(p1.id + " " + p2.id);
+      // console.log(p1.id + " " + p2.id);
 
       var contactNormal = p2.position.sub(p1.position).normalized(); //n in the paper, how do we get this?
       // for now, since its just circles:
       //var penetration = p1.position.sub(p2.position).dot(contactNormal);
       var penetration =
-        p1.radius + p2.radius - p2.position.sub(p1.position).dot(contactNormal);
+        p1.radius + p2.radius - p2.position.sub(p1.position).dot(contactNormal);//.length();//
 
-      console.log(penetration);
+      // console.log(penetration);
 
       //if we dont actually contact, go to the next pair
       if (penetration <= 0) continue;
@@ -187,7 +190,7 @@ export class Particle {
 
 
 	// d0 is set to p.radius in his
-	function solveDistPos(p0, p1, d0, compliance, unilateral, dt) 
+	function solveDistPos(p0, p1, d0, compliance, unilateral, dt)
 	{
 		var w = p0.invMass + p1.invMass;
 		if (w == 0)
@@ -197,7 +200,7 @@ export class Particle {
 		w += compliance / dt / dt;
 		// abar goes to 0 in mine
 		var lambda = (d - d0) / w; // distance-radius / abar+w1+w2
-				
+
 		if (lambda < 0 && unilateral)
 			return;
 		p1.force = lambda / dt / dt;
