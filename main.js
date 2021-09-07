@@ -43,7 +43,7 @@ let pause = false;
 
 let currentLevel = 0;
 //
-let levels = [ level1 , level2, bosslevel,  victoryLevel ];
+let levels = [ level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;

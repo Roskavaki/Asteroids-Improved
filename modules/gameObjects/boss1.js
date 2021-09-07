@@ -2,7 +2,6 @@ import { obj } from "../obj.js";
 import { spaceobj } from "../spaceobj.js";
 import { nGon, sqr } from "../shapes.js";
 
-import { bullet  } from "../bullet.js";
 import { BulletV2 } from "./bulletV2.js";
 
 import * as utils from "../utils/spaceUtils.js";
@@ -35,6 +34,8 @@ export class Boss1 extends spaceobj{
 		this.wrap=true;
 
 		this.collisionLayer = 3;
+
+		this.totalTime = 0;
 	}
 
 	setRadius( radius  ){
@@ -45,6 +46,12 @@ export class Boss1 extends spaceobj{
 
 	update( deltaT ){
 		super.update( deltaT );
+
+		this.totalTime += deltaT;
+		let b = new Vec2( Math.sin( this.totalTime *2  )*1.5 -0.5 ,    Math.sin( this.totalTime * 6 )* 1.5 );
+
+		this.addPosition( b );
+
 		this.fire();
 	}
 
