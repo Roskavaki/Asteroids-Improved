@@ -26,6 +26,8 @@ class playership extends spaceobj {
 		this.isReloading = false;
 
 		this.maxHp = this.hp;
+
+		this.playerNo = 1;
 	}
 
 	draw(ctx) {
@@ -63,28 +65,51 @@ class playership extends spaceobj {
 
 	update( deltaT ) {
 		let input = this.input;
-		if (input.getKey("W")) {
-			var thrust = this.forward().mul(-0.1);
 
-			this.velocity = new Vec2( 
-				this.velocity.x + thrust.x,
-				this.velocity.y + thrust.y
-			);
-		}
-
-		if (input.getKey("a") && !input.getKey("D")) {
-			this.rotation -= (deltaT * this.rotationSpeed * 3.14) / 180;
-		}
-
-		if (input.getKey("D") && !input.getKey("A")) {
-			this.rotation += (deltaT * this.rotationSpeed * 3.14) / 180;
-		}
-
-		if (input.getKey(32)) {
-			this.fire();
-		}
+		this.handleControls( this.playerNo , input , deltaT );
 
 		super.updatePosition(deltaT);
+	}
+
+	handleControls( playerNo , input , deltaT=0 ){
+
+		let leftkey = "A";
+		let rightkey = "D";
+		let upkey = "W";
+		let firekey = 32;
+		
+		if( playerNo === 2){
+			leftkey = 37;
+			rightkey = 39;
+			upkey = 38;
+			firekey = "m";
+		}
+
+		if (input.getKey(upkey)) {
+			this.thrust();
+		}			
+		if (input.getKey(leftkey) && !input.getKey(rightkey)) {
+			this.rotate( -1 , deltaT );
+		}
+		if (input.getKey(rightkey) && !input.getKey(leftkey)) {
+			this.rotate(  1 , deltaT );
+		}
+		if (input.getKey(firekey)) {
+			this.fire();
+		}
+	}
+
+	thrust(){
+		var thrust = this.forward().mul(-0.1);
+	
+		this.velocity = new Vec2( 
+			this.velocity.x + thrust.x,
+			this.velocity.y + thrust.y
+		);
+	}
+
+	rotate( mul=1 , deltaT=0 ){
+		this.rotation += (deltaT * this.rotationSpeed * 3.14 * mul) / 180;
 	}
 
 	onCollision(other){

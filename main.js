@@ -4,16 +4,12 @@ import { scoreboard } from "./modules/scoreboard.js";
 import { Vec2 } from "./modules/utils/vec2.js";
 
 import {
-	drawText,
-	drawTextCenterScreen,
 	drawTextUpperLeft,
 } from "./modules/utils/textUtils.js";
 import { Input } from "./modules/input.js";
 
 import * as level1 from "./levels/level1.js";
 import * as level2 from "./levels/level2.js";
-
-
 import * as bosslevel from "./levels/boss1Level.js";
 import * as victoryLevel from "./levels/victoryLevel.js";
 import * as defeatLevel from "./levels/defeatLevel.js";
@@ -30,13 +26,14 @@ let width = canvas.width;
 let height = canvas.height;
 
 let objs = [];
-let bullets = [];
 let objectives = [];
 
 let player = new playership(objs, gameInput, "yellow");
 player.position = new Vec2( width / 2, height / 2 + 60);
 
-
+let player2 = new playership(objs, gameInput, "red");
+player2.position = new Vec2( width / 2, height / 2 + 60);
+player2.playerNo = 2;
 
 // Pause rendering and game logic
 let pause = false;
@@ -49,30 +46,46 @@ let currentTime = date.getTime();
 let lastTime = currentTime;
 
 
-//let levels =  [  lastlevel.createLevel() ];
+let coopMode = false;
+let p2joined = 0;
 
-function loadDefeatLevel(){	
-	loadLevel( defeatLevel );
+
+function loadDefeatLevel(coopMode=false){	
+	loadLevel( defeatLevel , coopMode);
 	currentLevel = -1;  // -1 Because the defeat level is not actually in the array
 }
 
-function loadLevelIndex(ind) {
+function loadLevelIndex(ind , coopMode=false) {
 	console.log( 'loading level: '+ind);
-	loadLevel( levels[ind] );
+	loadLevel( levels[ind] , coopMode);
 }
 
-function loadLevel( level ){
+function resetPlayer( player ){
+	player.position = new Vec2( width / 2, height / 2 + 120);
+	player.velocity = Vec2.zero();
+}
+
+function resetPlayer2( player ){
+	player.position = new Vec2( width / 2, height / 2 + 170);
+	player.velocity = Vec2.zero();
+
+
+}
+
+function loadLevel( level , coopMode=false ){
 	let lvl = level.createLevel();
 	objs       = lvl.objects;
 	objectives = lvl.objectives;
 
 	player.objects = objs;
-	player.position = new Vec2( width / 2, height / 2 + 120);
-	player.velocity = Vec2.zero();
-
+	resetPlayer( player );
 	objs.push( player );
 
-	console.log( objs );
+	if( coopMode ){
+		player2.objects = objs;
+		resetPlayer2( player2 );
+		objs.push( player2 );
+	}
 
 	// Run the start function on each gameobject as soon as the level starts.
 	// Note: not the same as the constructor because levels are created long before they
@@ -87,6 +100,20 @@ function loadLevel( level ){
 	});
 }
 
+function hotJoinPlayer2(){
+	console.log( "p2 join" );
+
+	if( coopMode == false){
+		coopMode = true;
+		player2.objects = objs;
+		resetPlayer2( player2 );
+		objs.push( player2 );		
+	}
+}
+
+function dropOutPlayer2(){
+	console.log( "p2 leave" );
+}
 
 function removeDestroyedObjects(objs) {
 	// Object removal,  do not use filter
@@ -105,12 +132,18 @@ function showScoreboard(){
 
 // Main game loop to draw each frame
 function mainloop() {
-	//ctx.clearRect(0, 0, width, height);
-
 	date = new Date();
 	lastTime = currentTime;
 	currentTime = date.getTime();
 	let deltaT = (currentTime - lastTime) / 1000;
+
+	if( gameInput.getKeyDown("p")){
+		hotJoinPlayer2();
+	}
+
+	if( gameInput.getKeyDown("o")){
+		dropOutPlayer2();
+	}
 	
 	if (!pause) {
 		ctx.fillStyle = "black";
@@ -143,7 +176,7 @@ function mainloop() {
 				currentLevel = 0;
 				console.log("All levels complete");
 			}
-			loadLevelIndex(currentLevel);
+			loadLevelIndex(currentLevel , coopMode);
 		}
 
 		// Score
@@ -151,13 +184,15 @@ function mainloop() {
 
 		// Defeat if player died
 		if( player.hp <=0 ){
-			loadDefeatLevel();
+			loadDefeatLevel( coopMode );
 		}		
 	}
+
+	gameInput.clearkeydowns();
 }
 
 // Load first level
-loadLevelIndex(currentLevel);
+loadLevelIndex(currentLevel,coopMode);
 
 // Start the main loop
 setInterval(mainloop, 30);

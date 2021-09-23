@@ -3,14 +3,29 @@ export class Input {
     // super();
     this.canvas = canvas;
     this.pressed = {};
+    this.keydown = {};
+
     this.canvas.onkeydown = (e) => {
       e = e || window.event;
       this.pressed[e.keyCode] = true;
+      this.keydown[e.keyCode] = true;
     };
+
     this.canvas.onkeyup = (e) => {
       e = e || window.event;
       delete this.pressed[e.keyCode];
     };
+  }
+
+  clearkeydowns(){
+    this.keydown = {};
+  }
+
+  getKeyDown(keyName){
+    if (typeof keyName == "string") {
+      return this.keydown[keyName.toUpperCase().charCodeAt(0)];
+    }
+    return this.keydown[keyName];
   }
 
   /**
