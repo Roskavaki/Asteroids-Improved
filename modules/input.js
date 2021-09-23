@@ -9,6 +9,7 @@ export class Input {
       e = e || window.event;
       this.pressed[e.keyCode] = true;
       this.keydown[e.keyCode] = true;
+      e.preventDefault();
     };
 
     this.canvas.onkeyup = (e) => {
