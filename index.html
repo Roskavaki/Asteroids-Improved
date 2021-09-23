@@ -1,9 +1,15 @@
 <html>
 	<head>
-		<link rel = "stylesheet" type = "text/css" href = "/styles/customfonts.css">
+		<link rel = "stylesheet" type = "text/css" href = "styles/customfonts.css">
 	</head>
 
 	<body>
+		<div style="display: flex; justify-content: center;">
+			<div class="font3">
+				Asteroids Improved!
+			</div>		
+		</div>
+
 		<div style="display: flex; justify-content: center;">
 			<div>
 				<canvas id="canvas" width="700" height="700"></canvas>
@@ -17,8 +23,10 @@
 				<b>Controls:</b>
 				<div>
 					<div style="display: flex; flex-flow: row;">
-						<div>
-							Player 1
+						<div class="small-margin">
+							<div>
+								Player 1
+							</div>
 							<ul>
 								<li>Thrust: W</li>
 								<li>Rotation: A,D</li>
@@ -26,8 +34,10 @@
 							</ul>							
 						</div>
 
-						<div>
-							Player 2
+						<div class="small-margin">
+							<div>
+								Player 2
+							</div>
 							<ul>
 								<li>Join: p</li>
 								<li>Thrust: Up arrow</li>

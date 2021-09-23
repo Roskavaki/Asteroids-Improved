@@ -24,6 +24,10 @@
         url('../fonts/cursed-timer-ulil-font/CursedTimerUlil-Aznm.ttf') ;
 }
 
+.small-margin{
+    margin: 5px;
+}
+
 .font3{
 	font-family: biting;
 	font-size: 40px;
