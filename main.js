@@ -25,6 +25,7 @@ ctx.fillStyle = "green";
 let width = canvas.width;
 let height = canvas.height;
 
+let collisionObjs = [];
 let objs = [];
 let objectives = [];
 
@@ -47,8 +48,14 @@ let lastTime = currentTime;
 
 
 let coopMode = false;
-let p2joined = 0;
 
+function addObject( obj ){
+	objs.push( obj );
+
+	if( obj.canCollide ){
+		collisionObjs.push( obj );
+	}
+}
 
 function loadDefeatLevel(coopMode=false){	
 	loadLevel( defeatLevel , coopMode);
@@ -68,8 +75,6 @@ function resetPlayer( player ){
 function resetPlayer2( player ){
 	player.position = new Vec2( width / 2, height / 2 + 170);
 	player.velocity = Vec2.zero();
-
-
 }
 
 function loadLevel( level , coopMode=false ){
@@ -130,6 +135,8 @@ function showScoreboard(){
 	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, fill , "biting" );
 }
 
+let frame = 0;
+
 // Main game loop to draw each frame
 function mainloop() {
 	date = new Date();
@@ -145,7 +152,7 @@ function mainloop() {
 		dropOutPlayer2();
 	}
 	
-	if (!pause) {
+	if (!pause) {		
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, width, height);
 

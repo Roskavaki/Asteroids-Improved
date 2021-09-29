@@ -17,11 +17,14 @@ class obj {
 
     this.color = colour;
     this.position = new Vec2(0,0);
+    this.localposition = new Vec2(0,0);
     this.rotation = 0;
+    this.localrotation = 0;
 
     this.canCollide = false;
     this.collisionRadius = 1;
     this.collisionLayer = collisionLayer;
+    this.drawCollider = false;
 
     this.markedForDestroy = false;
 
@@ -31,9 +34,25 @@ class obj {
     this.objectName = objectName;
 
     this.children = [];
+    this.parent = null;
   }
 
-  update(deltaT, input) {}
+  update(deltaT, input) {
+    this.updateRelativePosition();
+  }
+
+  updateRelativePosition(){
+    if( this.parent !== null && this.parent!==undefined){      
+      this.rotation = this.parent.rotation + this.localrotation;
+      this.position = this.parent.position.add( this.localposition.newRotated( this.parent.rotation  ) ) ;
+    }
+  }
+
+  updateChildren(deltaT){
+    this.children.forEach((child)=>{
+      child.update(deltaT);
+    });  
+  }
 
   onCollision(other) {}
 
@@ -53,20 +72,51 @@ class obj {
     this.verts.push([x, y]);
   }
 
+  addChild( child ){
+    child.addParent(this);
+    this.children.push( child );
+  }
+
+  addParent( parent ){
+    this.parent = parent;
+  }
+
+  removeChild( child ){
+    this.children = this.children.filter(item => item !== child);
+  }
+
+  removeParent(){
+    this.parent=null;
+  }
+
   destroy() {
     //	console.log( 'this.destroy' );
     this.markedForDestroy = true;
   }
 
   draw(ctx, wrap = false) {
-    utils.drawVerts(
-      ctx,
-      this.verts,
-      this.rotation,
-      this.position.toArray(),
-      this.color,
-      wrap
-    );
+
+    //Debug circle
+    if( this.drawCollider ){
+      utils.circleDefault(ctx , this.position , this.collisionRadius , this.color);
+    }
+
+    this.children.forEach((child)=>{
+      child.draw(ctx, wrap);
+    });
+
+    if( this.verts ){
+      let pos = this.position.toArray();
+      utils.drawVerts(
+        ctx,
+        this.verts,
+        this.rotation,
+        pos,
+        this.color,
+        wrap
+      );      
+    }
+
   }
 }
 

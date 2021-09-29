@@ -69,6 +69,8 @@ class playership extends spaceobj {
 		this.handleControls( this.playerNo , input , deltaT );
 
 		super.updatePosition(deltaT);
+
+		super.updateChildren( deltaT );
 	}
 
 	handleControls( playerNo , input , deltaT=0 ){

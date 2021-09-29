@@ -103,8 +103,18 @@ export class Vec2 {
     //return  new Vec2( xp, yp );
   }
   
-  rotDegrees( theta ){
-    this.rotate( theta * Math.PI/180 );
+  rotDegrees( degrees ){
+    this.rotate( degrees * Math.PI/180 );
+  }
+
+  newRotated( theta ){
+    let cos = Math.cos( theta );
+    let sin = Math.sin( theta );
+    let x = this.x;
+    let y = this.y;
+    let xp = x*cos - y*sin;
+    let yp = x*sin + y*cos;
+    return new Vec2( xp,yp );
   }
 
   /**

@@ -13,6 +13,8 @@ class spaceobj extends obj {
     this.hp = 20;
 
     this.wrap = wrap;
+
+    
   }
 
   forward() {
@@ -38,9 +40,6 @@ class spaceobj extends obj {
   draw(ctx) {
     // This object should wrap around when it goes offscreen
     super.draw(ctx, this.wrap);
-
-    //Debug circle
-    //circleDefault(ctx , this.position , this.collisionRadius , this.color);
   }
 
   updateRotation(deltaT) {
