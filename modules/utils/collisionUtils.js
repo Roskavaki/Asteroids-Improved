@@ -46,7 +46,7 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 /** Checks every object against every other object
  * Objects that cannot collide are skipped
  */
- function checkCollisions( objects){
+ function checkCollisions( objects , restitution = 1 ){
 	for( let i=0; i< objects.length; i++ ){
 		let objectA = objects[i];
 
@@ -55,9 +55,11 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 				let objectB = objects[j];
 
 				if( objectB.canCollide ){
-					let collision = checkCollision( objectA , objectB );
+					let collision = checkCollisionCircleCircle( objectA , objectB );
 
 					if( collision ){
+						handleCollision( objectA , objectB , restitution );
+
 						objectA.onCollision( objectB );
 						objectB.onCollision( objectA );
 					}
@@ -68,13 +70,46 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 	}
 }
 
+function handleCollision( objectA , objectB , restitution ){
+	handleCollisionCircleCircle( objectA , objectB , restitution );
+}
+
+function handleCollisionCircleCircle( objectA , objectB , restitution=1 ){
+
+	let dir = objectB.position.sub( objectA.position );
+	let d = dir.length();
+	let totalRadius = objectA.collisionRadius + objectB.collisionRadius;
+
+	if( d == 0.0 || d > totalRadius)
+		return;
+
+	dir.scale( 1.0/d );
+
+	// amount to correct positions by
+	let corr = (totalRadius-d) / 2.0;
+	objectA.position.add2( dir.mul( -corr )  );
+	objectB.position.add2( dir.mul(  corr )  );
+	
+	let v1 = objectA.velocity.dot(dir);
+	let v2 = objectB.velocity.dot(dir);
+
+	let m1 = objectA.mass;
+	let m2 = objectB.mass;
+	
+	let newV1 = ( m1*v1 + m2*v2 - m2*(v1-v2)*restitution) / (m1+m2);
+	let newV2 = ( m1*v1 + m2*v2 - m1*(v2-v1)*restitution) / (m1+m2);
+
+	objectA.velocity.add2( dir.mul(newV1 - v1) );
+	objectB.velocity.add2( dir.mul(newV2 - v2) );
+}
+
 /**
  * Check for collision between A and B
  * @param {*} objectA 
  * @param {*} objectB 
  * @returns true if A and B have collided
  */
- function checkCollision( objectA , objectB ){
+function checkCollisionCircleCircle( objectA , objectB ){
 
 	if(  objectA === objectB ){
 		console.error( "object is colliding with itself" );
@@ -84,9 +119,9 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 	let layerA = objectA.collisionLayer;
 	let layerB = objectB.collisionLayer;
 
+	// Check that the collision layers of the objects allow them to collide
 	let canCollide = checkCollisionLayers( layerA , layerB );
-	//(layerA  <=  layerB);
-
+	
 	if( canCollide ){
 		let totalRadius = objectA.collisionRadius + objectB.collisionRadius;
 
@@ -118,7 +153,7 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 		let collide = (layerA  <=  layerB);
 
 		if( curr !==  x ){
-			let didhit = checkCollision( x , curr );
+			let didhit = checkCollisionCircleCircle( x , curr );
 			if( didhit ){
 				return curr;
 			}
@@ -130,6 +165,6 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 
 
 export { checkInsideCircle }
-export { checkCollision }
+export { checkCollisionCircleCircle as checkCollision }
 export { checkCollisions }
 export { checkCollisionsOneToMany }

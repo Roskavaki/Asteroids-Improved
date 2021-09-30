@@ -40,15 +40,16 @@ player2.playerNo = 2;
 let pause = false;
 
 let currentLevel = 0;
-//
+
 let levels = [ level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
 
-
 let coopMode = false;
 
+
+//unused easier way to
 function addObject( obj ){
 	objs.push( obj );
 

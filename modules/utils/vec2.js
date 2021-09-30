@@ -6,6 +6,15 @@ export class Vec2 {
     // this.w = w; //thing so we can have cross product (just in case)
   }
 
+  /**
+   * Copies the properites of v onto current vector
+   * @param {*} v 
+   */
+  set(v){
+    this.x = v.x;
+    this.y = v.y;
+  }
+
   // math functions
   /**
    * creates the new vector resulting from adding this one to another
@@ -15,6 +24,12 @@ export class Vec2 {
   add(other) {
     return new Vec2(this.x + other.x, this.y + other.y);
   }
+
+  add2(other){
+    this.x+=other.x;
+    this.y+=other.y;
+  }
+
   /**
    * creates the new vector resulting from subtracting this one to another
    * @param {Vec2} other other vector
@@ -23,6 +38,18 @@ export class Vec2 {
   sub(other) {
     return new Vec2(this.x - other.x, this.y - other.y);
   }
+
+  /**
+   * Scales the current vector by s.  Same as mul but does not return a NEW vector
+   * @param {*} s 
+   * @returns self
+   */
+  scale(s=1){
+    this.x *=s;
+    this.y *=s;
+    return this;
+  }
+
   /**
    * creates the new vector resulting from multiplying this vector with the scalar
    * @param {number} scalar the scalar
@@ -125,6 +152,14 @@ export class Vec2 {
     return new Vec2( this.x , this.y );
   }
 
+  /**
+   * Same as cpy
+   * @returns a new vector with the same x,y
+   */
+  clone(){
+    return this.cpy();
+  }
+
   /** Updates the current vector to the x and y of the input arg */
   apply( newPos ){
     this.x=newPos.x;
@@ -137,6 +172,10 @@ export class Vec2 {
    */
   toArray(){
     return [this.x , this.y];
+  }
+
+  toString(){
+    return "("+this.x + ' ' + this.y+")";
   }
 
   wrap( width=700 , height=700 ){
@@ -159,6 +198,15 @@ export class Vec2 {
   
     this.x = x;
     this.y = y;
+  }
+
+  
+  static addVectors(a,b){
+    return new Vec2(a.x + b.x , a.y + b.y);
+  }
+
+  static subtractVectors(a,b){
+    return new Vec2(a.x - b.x , a.y - b.y);
   }
 
   // identities

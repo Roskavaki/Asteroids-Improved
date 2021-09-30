@@ -35,20 +35,20 @@ class asteroid extends spaceobj{
 		// Type of other object
 
 		if( other!== null ){
-			let ast = other instanceof asteroid;
+			//this.basicCollision(other);
+		}
+	}
 
-			//let otherIsBrother = (other === this.collisionDisabledWith);
+	//Original, unrealistic collision code
+	basicCollision(other){
+		let ast = other instanceof asteroid;
+		if( ast  ){
+			let diff = this.position.sub( other.position );
+			diff.normalize();
+			let mag = diff.mul( 1 );
 
-			//console.log( otherIsBrother )
-
-			if( ast  ){
-				let diff = this.position.sub( other.position );
-				diff.normalize();
-				let mag = diff.mul( 1 );
-
-				this.position = this.position.add( mag.mul(2) );
-				this.velocity = mag;
-			}			
+			this.position = this.position.add( mag.mul(2) );
+			this.velocity = mag;
 		}
 	}
 

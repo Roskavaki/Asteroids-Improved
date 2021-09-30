@@ -25,6 +25,8 @@ export class box1 extends obj {
 
     this.target=target;
 
+    this.wrap = true;
+
     
   }
 

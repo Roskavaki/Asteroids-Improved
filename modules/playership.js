@@ -27,6 +27,8 @@ class playership extends spaceobj {
 
 		this.maxHp = this.hp;
 
+		this.mass = 5.0;
+
 		this.playerNo = 1;
 	}
 
@@ -116,19 +118,18 @@ class playership extends spaceobj {
 
 	onCollision(other){
 		console.log("Player collision");
-		//console.log( other );
+		
+		//this.basicCollision( other );
+
+		this.doDamage(2);
+	}
+
+	basicCollision( other ){
 		let norm = other.position.sub( this.position ).normalized();
-
 		let r =  norm.mul( 2*this.velocity.dot(norm) ).sub( this.velocity ).mul(-0.5);
-
 		let moveApart = other.collisionRadius + this.collisionRadius +1;
 		this.position = other.position.add( norm.mul( -moveApart )) ;
-
-		//utils.lineDefault(  )
-		this.velocity = r;//norm.mul( this.velocity.length() );
-		this.doDamage(2);
-		//this.velocity = this.velocity.mul(-1); //diff;
-
+		this.velocity = r;
 	}
 
 	fire() {

@@ -25,6 +25,8 @@ class obj {
     this.collisionRadius = 1;
     this.collisionLayer = collisionLayer;
     this.drawCollider = false;
+    this.mass = 10;
+    this.colliderType = 1;// 1 circle
 
     this.markedForDestroy = false;
 
