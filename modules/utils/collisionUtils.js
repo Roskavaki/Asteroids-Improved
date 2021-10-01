@@ -2,6 +2,7 @@
  * File to generally put collision helper functions
  */
 import { distance } from "./spaceUtils.js";
+import { Vec2 } from "./vec2.js";
 
 /**
  * Keep it square.
@@ -71,7 +72,78 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 }
 
 function handleCollision( objectA , objectB , restitution ){
-	handleCollisionCircleCircle( objectA , objectB , restitution );
+	let c1 = objectA.colliderType;
+	let c2 = objectB.colliderType;
+
+	if( c1 == 1 ){
+		if( c2 == 1 ){
+			handleCollisionCircleCircle( objectA , objectB , restitution );
+		}
+
+		if( c2 == 2 ){
+			handleCollisionCircleCapsule( objectA , objectB , restitution );
+		}
+	}
+	else if ( c1 == 2 ){
+		if( c2 == 1 ){
+			handleCollisionCircleCapsule( objectB , objectA , restitution );
+		}
+
+		if( c2 == 2 ){
+			handleCollisionCapsuleCapsule( objectA , objectB , restitution );
+		}
+	}
+}
+
+function handleCollisionCapsuleCapsule( objectA , objectB , restitution ){
+	//TODO
+}
+
+function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
+	let p1 = capsule.collider.p1;
+	let p2 = capsule.collider.p2;
+
+	let closest = closestPointOnSegment( circle.position , p1 , p2 );
+	let dir = circle.position.sub( closest );
+	let d = dir.length();
+
+	let totalRadius = circle.collisionRadius + capsule.collisionRadius;
+
+	if( d==0.0 || d > totalRadius ){
+		return;
+	}
+
+	dir.scale( 1.0/d );
+
+	// amount to correct positions by
+	let corr = (totalRadius-d) / 2.0;
+	objectA.position.add2( dir.mul( -corr )  );
+	objectB.position.add2( dir.mul(  corr )  );
+	
+	let v1 = objectA.velocity.dot(dir);
+	let v2 = objectB.velocity.dot(dir);
+
+	let m1 = objectA.mass;
+	let m2 = objectB.mass;
+	
+	let newV1 = ( m1*v1 + m2*v2 - m2*(v1-v2)*restitution) / (m1+m2);
+	let newV2 = ( m1*v1 + m2*v2 - m1*(v2-v1)*restitution) / (m1+m2);
+
+	objectA.velocity.add2( dir.mul(newV1 - v1) );
+	objectB.velocity.add2( dir.mul(newV2 - v2) );
+}
+
+function closestPointOnSegment( p=new Vec2(0,0) , a=new Vec2(0,0) , b=new Vec2(1,1) ){
+	let ab = b.sub(a);
+	let t = ab.dot(ab);
+
+	if( t == 0.0 ){
+		return a.cpy;
+	}
+
+	t = Math.max( 0.0 , Math.min( 1.0 , ( p.dot(ab) - a.dot(ab) )/ t  )  );
+	let closest = a.cpy();
+	return closest.add( ab , t );
 }
 
 function handleCollisionCircleCircle( objectA , objectB , restitution=1 ){

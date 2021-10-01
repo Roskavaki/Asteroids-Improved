@@ -1,10 +1,9 @@
-import { obj } from "../obj.js";
+
 import { spaceobj } from "../spaceobj.js";
 import { nGon, sqr } from "../shapes.js";
 
 import { BulletV2 } from "./bulletV2.js";
 
-import * as utils from "../utils/spaceUtils.js";
 import { Vec2 } from "../utils/vec2.js";
 
 export class Boss1 extends spaceobj{
@@ -25,7 +24,7 @@ export class Boss1 extends spaceobj{
 		this.collisionRadius = radius;
 		this.canCollide = true;
 
-		this.angularVelocity = 60.2 ;
+		this.angularVelocity = 90.0 ;
 		this.position = new Vec2(350 ,200)  ;		
 		this.velocity = new Vec2(0 ,0) ;
 
@@ -94,11 +93,11 @@ export class Boss1 extends spaceobj{
 	
 	doDamage( x ){
 		if( !this.markedForDestroy ){
+
 			this.hp -= x/2;
-
 			this.setRadius( this.hp/2 );
-
 			this.reloadTime -= 0.01;
+			
 			if( this.hp<=20 ){
 				//scoreboard.add(1);
 				console.log('destroyed boss');

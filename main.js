@@ -13,6 +13,7 @@ import * as level2 from "./levels/level2.js";
 import * as bosslevel from "./levels/boss1Level.js";
 import * as victoryLevel from "./levels/victoryLevel.js";
 import * as defeatLevel from "./levels/defeatLevel.js";
+import * as flockers from "./levels/flockersLevel.js";
 
 const canvas = document.getElementById("canvas");
 
@@ -40,8 +41,8 @@ player2.playerNo = 2;
 let pause = false;
 
 let currentLevel = 0;
-
-let levels = [ level1 , level2, bosslevel, victoryLevel ];
+//flockers , 
+let levels = [  level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;

@@ -5,11 +5,12 @@ import * as utils from "./utils/spaceUtils.js";
 import { Vec2 } from "./utils/vec2.js";
 
 class asteroid extends spaceobj{
-	constructor( objects , radi = 64 , colour = "yellow" ){
+	constructor( objects , radi = 64 , colour = "yellow" , mass=10 ){
 		super( objects , null ,colour );
 		this.radius = radi;
 		this.colour = colour;
 		this.maxVariance = 14;
+		this.mass = mass;
 		this.verts = this.generateAstroid();
 
 		this.collisionRadius = radi + this.maxVariance/2;
@@ -64,8 +65,9 @@ class asteroid extends spaceobj{
 
 					let axis = this.velocity.cpy();
 					axis.rotDegrees( 90 );
-					let div1 = axis.mul(  rad/2 );
-					let div2 = axis.mul( -rad/2  );
+					let r = this.collisionRadius/2 + 1;
+					let div1 = axis.mul( -r );
+					let div2 = axis.mul(  r );
 					
 					// A small offset is needed to prevent divide by zero which makes the children dissapear
 					//[ rad/2+0.1 , 0]  [-rad/2-0.1 , 0]
@@ -88,13 +90,14 @@ class asteroid extends spaceobj{
 		setTimeout(()=>{
 			this.canCollide=true;
 			this.collisionDisabledWith = null;
-		}, 1000);
+		}, 1500);
 	}
 
 	createChild( offset , collisionDisabledWith=null ){		
-		let child = new asteroid( this.objects , this.radius/2 , this.colour);
+		let child = new asteroid( this.objects , 
+			this.radius/2 , this.colour , this.mass/2);
 
-		child.position =  new Vec2 ( this.position.x + offset.x + Math.random()*0.1  , this.position.y + offset.y  );
+		child.position =  new Vec2 ( this.position.x + offset.x , this.position.y + offset.y  );
 		child.velocity =  this.velocity.cpy();
 
 
@@ -107,7 +110,7 @@ class asteroid extends spaceobj{
 		//let axis = this.velocity.normalized().mul( Math.random() * randomMultiplier );
 		//axis.rotDegrees( 90 );
 
-		child.velocity = child.velocity.add( randomVelocity );
+		//child.velocity = child.velocity.add( randomVelocity );
 
 		child.delayedEnableBrotherCollision();
 

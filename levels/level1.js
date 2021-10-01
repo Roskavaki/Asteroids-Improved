@@ -13,19 +13,23 @@ function createLevel() {
 	a1.velocity = new Vec2( 0, 1.5 );
 	a1.objectName = "a1";
 	a1.drawCollider=true;
+	a1.mass = 20
+	a1.angularVelocity = -15
 
-	const a2 = new asteroid(objs, 32, "yellow");
-	a2.position = new Vec2( 100 , 500 );
+	const a2 = new asteroid(objs, 16, "yellow");
+	a2.position = new Vec2( 110 , 500 );
 	a2.velocity = new Vec2( 0 , -1.1 );
 	a2.objectName = "a2";
 	a2.drawCollider=true;
+	a2.mass=40;
+	a2.angularVelocity = 10;
   	
 	const txt = new ShrinkingText("Level 1");
 
 	const objective = new DestroyAllAsteroids(objs);
 	let objectives = [objective];
 
-	objs.push(a1, a2, txt);
+	objs.push(  a2, txt);
 
 	let level = {
 		levelname: "Level 1",

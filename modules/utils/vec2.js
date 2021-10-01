@@ -31,7 +31,7 @@ export class Vec2 {
   }
 
   /**
-   * creates the new vector resulting from subtracting this one to another
+   * Creates new vector resulting from subtracting this one from another
    * @param {Vec2} other other vector
    * @returns result of this - other
    */

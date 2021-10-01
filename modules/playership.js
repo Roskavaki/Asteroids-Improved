@@ -15,7 +15,7 @@ class playership extends spaceobj {
 
 		this.colour = colour;
 		this.thrustSpd = 1;
-		this.rotationSpeed = 90;
+		this.rotationSpeed = 120;
 		this.fireSpeed = 4;
 
 		this.wrap = true;
