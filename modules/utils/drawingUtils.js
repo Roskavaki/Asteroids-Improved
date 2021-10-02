@@ -6,7 +6,7 @@ import { rot , tf , wrapCoordinates , lerpXY } from "./spaceUtils.js";
 
 
 /** Draw a line one pixel at a time, instead of using the default canvas command */
-function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
+function line(ctx, x1 , y1 , x2 , y2 , color="red" , wrap=false){
 	ctx.save();
 	for( let aa=0; aa<1; aa+=0.05){
 		let p = lerpXY( x1 , y1 , x2 , y2 , aa);
@@ -20,6 +20,10 @@ function line(ctx, x1 , y1 , x2 , y2 , color="black" , wrap=false){
 		}
 	}
 	ctx.restore();	
+}
+
+export function lineBetweenVector2( ctx , p1 , p2 , color="red" , wrap=false){
+	line( ctx, p1.x , p1.y , p2.x , p2.y , color , wrap);
 }
 
 /**
@@ -61,7 +65,7 @@ function pix( ctx, x , y , color="black"){
 }
 
 
-function drawVerts(ctx , verts , rotation=0 , position=[0,0], color="red" , wrap=false ){
+function drawVerts(ctx , verts=[] , rotation=0 , position=[10,10], color="red" , wrap=false ){
 	//var verts = this.verts;
 	//var color = this.color;
 	if( verts.length>1){

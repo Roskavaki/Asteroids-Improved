@@ -1,20 +1,23 @@
 import { ShrinkingText } from "../modules/textObjects/shrinkingText.js";
 import { DestroyParticularObject } from "../modules/objectives/destroyParticularObject.js";
-import { Boss1 } from "../modules/gameObjects/boss1.js";
-import { box1 } from "../modules/gameObjects/box1.js";
+import { NonCompletable } from "../modules/objectives/nonCompletableObjective.js";
+import { CapsuleBarrier } from "../modules/gameObjects/barrier.js";
 
 export function createLevel() {
  	let objs = [];
 
-	const boss = new Boss1(objs);
+
+	const objective = new NonCompletable( objs );
+	
+	const barrier = new CapsuleBarrier(objs);
 	  	
 	const txt = new ShrinkingText("Flock!");
-	const objective = new DestroyParticularObject( boss );
+	
 	let objectives = [ objective ];
 
-	objs.push(boss , txt );
+	objs.push( barrier , txt );
 
-	console.log( "flockers")
+	console.log( "flockers dddd")
 	
 	let level = {
 		levelname: "Flockers",

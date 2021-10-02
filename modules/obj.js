@@ -21,8 +21,9 @@ class obj {
     this.rotation = 0;
     this.localrotation = 0;
 
+    this.collider=null;
     this.canCollide = false;
-    this.collisionRadius = 1;
+    this.collisionRadius = 10;
     this.collisionLayer = collisionLayer;
     this.drawCollider = false;
     this.mass = 10;
@@ -59,6 +60,32 @@ class obj {
   onCollision(other) {}
 
   onStart(inp){}
+
+
+
+  getCollider(){
+    return this.collider;
+  }
+
+  getCollisionRadius(){
+    return this.collisionRadius;
+  }
+
+  getCollisionLayer(){
+    return this.collisionLayer;
+  }
+
+  getCanCollide(){
+    return this.canCollide;
+  }
+
+  getColliderType(){
+    return this.colliderType;
+  }
+
+
+
+
 
   addPosition(offset, wrap = false) {
     //this.position[0] += offset[0];
@@ -100,7 +127,7 @@ class obj {
 
     //Debug circle
     if( this.drawCollider ){
-      utils.circleDefault(ctx , this.position , this.collisionRadius , this.color);
+      utils.circleDefault(ctx , this.position.toArray() , this.collisionRadius , this.color);
     }
 
     this.children.forEach((child)=>{

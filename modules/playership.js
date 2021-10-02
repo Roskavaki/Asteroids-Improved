@@ -2,6 +2,8 @@ import { spaceobj } from "./spaceobj.js";
 import { tri } from "./shapes.js";
 import { Vec2 } from "./utils/vec2.js";
 import { BulletV2 } from "./gameObjects/bulletV2.js";
+import { asteroid } from "./asteroid.js";
+import { CircleCollider } from "./colliders/circleCollider.js";
 
 class playership extends spaceobj {
 	constructor(objects, input, colour = "red") {
@@ -30,6 +32,10 @@ class playership extends spaceobj {
 		this.mass = 5.0;
 
 		this.playerNo = 1;
+
+		this.collider = new CircleCollider(this.collisionRadius);
+
+		this.objectName = "player"
 	}
 
 	draw(ctx) {
@@ -121,7 +127,8 @@ class playership extends spaceobj {
 		
 		//this.basicCollision( other );
 
-		this.doDamage(2);
+		if ( other instanceof asteroid )
+			this.doDamage(2);
 	}
 
 	basicCollision( other ){

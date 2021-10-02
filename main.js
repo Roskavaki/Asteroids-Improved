@@ -41,8 +41,8 @@ player2.playerNo = 2;
 let pause = false;
 
 let currentLevel = 0;
-//flockers , 
-let levels = [  level1 , level2, bosslevel, victoryLevel ];
+// 
+let levels = [ flockers , level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
@@ -204,7 +204,7 @@ function mainloop() {
 loadLevelIndex(currentLevel,coopMode);
 
 // Start the main loop
-setInterval(mainloop, 30);
+setInterval(mainloop, 60);
 
 // make a json object containing key state, pass it into update functions along with the deltaT
 

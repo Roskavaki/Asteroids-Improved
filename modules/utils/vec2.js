@@ -15,19 +15,27 @@ export class Vec2 {
     this.y = v.y;
   }
 
+  setFromArray(arr=[0,0]){
+    this.x=arr[0];
+    this.y=arr[1];
+  }
+
   // math functions
   /**
    * creates the new vector resulting from adding this one to another
    * @param {Vec2} other other vector
+   * @param {number} s scaling factor
    * @returns result of this + other
    */
-  add(other) {
-    return new Vec2(this.x + other.x, this.y + other.y);
+  add(other , s=1) {
+    return new Vec2(  (this.x + other.x)*s , (this.y + other.y)*s );
   }
 
-  add2(other){
+  add2(other ,s=1){
     this.x+=other.x;
     this.y+=other.y;
+
+    this.scale(s);
   }
 
   /**
@@ -82,6 +90,11 @@ export class Vec2 {
 
   reflect( normal ){
     return  normal.mul( 2*this.dot(normal) ).sub( this );
+  }
+
+  setZero(){
+    this.x=0.0;
+    this.y=0.0;
   }
 
   // util functions

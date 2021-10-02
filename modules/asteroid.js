@@ -3,17 +3,20 @@ import { rot , addVec } from "./utils/spaceUtils.js";
 import { scoreboard } from "./scoreboard.js";
 import * as utils from "./utils/spaceUtils.js";
 import { Vec2 } from "./utils/vec2.js";
+import { CircleCollider } from "./colliders/circleCollider.js";
 
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "yellow" , mass=10 ){
 		super( objects , null ,colour );
 		this.radius = radi;
+
 		this.colour = colour;
 		this.maxVariance = 14;
 		this.mass = mass;
 		this.verts = this.generateAstroid();
 
-		this.collisionRadius = radi + this.maxVariance/2;
+		let rad = radi + this.maxVariance/2;
+		this.collisionRadius = rad;
 		this.canCollide = true;
 		this.collisionLayer = 3;
 		
@@ -22,6 +25,8 @@ class asteroid extends spaceobj{
 		this.wrap=true;
 
 		this.collisionDisabledWith = null;
+
+		this.collider = new CircleCollider( rad );
 	}
 
 	/* 
@@ -81,8 +86,6 @@ class asteroid extends spaceobj{
 				super.destroy();
 			}
 		}
-
-
 	}
 
 	delayedEnableBrotherCollision(){
