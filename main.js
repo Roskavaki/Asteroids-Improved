@@ -41,8 +41,8 @@ player2.playerNo = 2;
 let pause = false;
 
 let currentLevel = 0;
-// flockers ,
-let levels = [  bosslevel, level1 , level2, victoryLevel ];
+// 
+let levels = [  flockers , level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
