@@ -15,7 +15,7 @@ export class Collider{
 	}
 
 	// For debug
-	drawCollider(ctx){
+	draw(ctx){
 		
 	}
 

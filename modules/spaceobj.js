@@ -1,5 +1,4 @@
 import { obj } from "./obj.js";
-import { rot, circleDefault } from "./utils/spaceUtils.js";
 import { Vec2 } from "./utils/vec2.js";
 
 class spaceobj extends obj {

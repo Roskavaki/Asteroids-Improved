@@ -19,7 +19,7 @@ export class CapsuleBarrier extends obj{
 		this.drawCollider=true;
 
 		let wid = 200;
-		let height = 50;
+		let height = 20;
 
 		this.collisionLayer=0;
 		this.canCollide = true;
@@ -32,7 +32,7 @@ export class CapsuleBarrier extends obj{
 
 		this.p1 = new Vec2( -wid/2 ,0);
 		this.p2 = new Vec2(  wid/2 ,0);
-		this.collider = new CapsuleCollider( this.p1 , this.p2 , 5  );
+		this.collider = new CapsuleCollider( this.p1 , this.p2 , 1  );
 
 		this.objectName = "barrier";
 	}
@@ -40,12 +40,11 @@ export class CapsuleBarrier extends obj{
 	doDamage(x){}
 	
 	draw(ctx,wrap=false){
-		super.draw(ctx,false);
-
+		super.draw(ctx,false);	
 
 		let ln =  [this.p1.toArray() , this.p2.toArray()];
 		drawVerts( ctx ,ln , 0, this.position.toArray() ,this.color );
-		circleDefault( ctx, this.p1.add(this.position).toArray() , this.collisionRadius , this.color);
+		circleDefault( ctx, this.p1.add(this.position).toArray() , this.collisionRadius , this.color );
 		circleDefault( ctx, this.p2.add(this.position).toArray() , this.collisionRadius , this.color );
 	}
 

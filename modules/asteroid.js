@@ -19,6 +19,7 @@ class asteroid extends spaceobj{
 		this.collisionRadius = rad;
 		this.canCollide = true;
 		this.collisionLayer = 3;
+		this.drawCollider = false;
 		
 		this.angularVelocity = Math.random()*2;
 

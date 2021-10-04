@@ -1,5 +1,4 @@
 import { ShrinkingText } from "../modules/textObjects/shrinkingText.js";
-import { DestroyParticularObject } from "../modules/objectives/destroyParticularObject.js";
 import { NonCompletable } from "../modules/objectives/nonCompletableObjective.js";
 import { CapsuleBarrier } from "../modules/gameObjects/barrier.js";
 

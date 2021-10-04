@@ -7,30 +7,35 @@ import { CapsuleCollider } from "../colliders/capsuleCollider.js";
 export class box1 extends obj {
 	constructor(objects, radius,  target, orbitRadius=40 ) {
 		super(objects, null, "cyan", 5);
+	
 		this.radius = radius;
 		this.position = new Vec2(100,100);
 		this.velocity = new Vec2(0,0);
 
-		this.verts = rectangle(10,50);
+		let width  = 10;
+		let height = 60;
+
+		this.verts = rectangle(width,height);
 
 		this.orbitRadius = orbitRadius;
 		this.orbitSpeed = -50;
 
-		this.hp=50;
-
-		this.collisionRadius = radius;
+		
+		this.colliderType = 2;
+		this.collisionRadius = width/2;
 		this.canCollide = true;
 		this.collisionLayer = 3;
+		//this.drawCollider = true;
 
-		this.drawCollider = true;
+		this.hp=50;
 
 		this.target=target;
 
 		this.wrap = true;
 
-		let p1 = new Vec2( 0 ,-25);
-		let p2 = new Vec2( 0 ,25);
-		this.collider = new CapsuleCollider();
+		let p1 = new Vec2( 0 , -height/2 + width/2);
+		let p2 = new Vec2( 0 ,  height/2 - width/2);
+		this.collider = new CapsuleCollider(p1, p2, width/2);
 
 	}
 
@@ -49,10 +54,20 @@ export class box1 extends obj {
 		//let aa = startingPoint.rotate(theta)
 		this.position = position.add( startingPoint.newRotated(theta) ) ;
 		this.rotation = this.localrotation;
+
+		this.collider.rotate(theta);
 	}
 
 
 	onCollision(other) {}
+
+	draw(ctx){
+		super.draw(ctx);
+
+		if( this.drawCollider )
+			this.collider.draw(ctx , this.position);
+		
+	}
 
 	doDamage( x ){
 		if( !this.markedForDestroy ){

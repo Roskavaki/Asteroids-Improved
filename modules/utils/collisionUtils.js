@@ -146,7 +146,7 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 		
 	let canCollide = checkCanCollide( circle , capsule );
 	if( !canCollide ){
-		console.log( 'cannot collide')
+		//console.log( 'cannot collide')
 		return false;
 	}
 	let objectA = circle;
@@ -158,7 +158,7 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 	let p2 = capsule.position.add( capsule.collider.p2 );
 
 	let closest = closestPointOnSegment( circle.position , p1 , p2 );
-	console.log( closest );
+	//console.log( closest );
 
 
 	let dir = circle.position.sub( closest );
@@ -188,8 +188,11 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 	let newV1 = ( m1*v1 + m2*v2 - m2*(v1-v2)*restitution) / (m1+m2);
 	let newV2 = ( m1*v1 + m2*v2 - m1*(v2-v1)*restitution) / (m1+m2);
 
-	//objectA.velocity.add2( dir.mul(newV1 - v1) );
-	objectA.velocity.setZero();
+	//circle
+	objectA.velocity.add2( dir.mul(newV1 - v1) );
+
+
+	//objectA.velocity.setZero();
 	//objectB.velocity.add2( dir.mul(newV2 - v2) );
 
 	return true;

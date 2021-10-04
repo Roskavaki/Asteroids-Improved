@@ -12,15 +12,13 @@ function createLevel() {
 	a1.position = new Vec2( 100, 100);
 	a1.velocity = new Vec2( 0, 1.5 );
 	a1.objectName = "a1";
-	a1.drawCollider=true;
 	a1.mass = 20
 	a1.angularVelocity = -15
 
-	const a2 = new asteroid(objs, 16, "yellow");
+	const a2 = new asteroid(objs, 64, "yellow");
 	a2.position = new Vec2( 110 , 500 );
 	a2.velocity = new Vec2( 0 , -1.1 );
 	a2.objectName = "a2";
-	a2.drawCollider=true;
 	a2.mass=40;
 	a2.angularVelocity = 10;
   	
