@@ -1,5 +1,5 @@
 
-import { asteroid } from "../asteroid.js";
+import { asteroid } from "../gameObjects/asteroid.js";
 
 /**
  * Objective which is complete when all asteroids in the level are destroyed

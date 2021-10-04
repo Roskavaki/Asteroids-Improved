@@ -1,4 +1,4 @@
-import { asteroid } from "../modules/asteroid.js";
+import { asteroid } from "../modules/gameObjects/asteroid.js";
 
 import { ShrinkingText } from "../modules/textObjects/shrinkingText.js";
 import { Vec2 } from "../modules/utils/vec2.js";

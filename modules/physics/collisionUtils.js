@@ -1,8 +1,8 @@
 /**
  * File to generally put collision helper functions
  */
-import { distance } from "./spaceUtils.js";
-import { Vec2 } from "./vec2.js";
+import { distance } from "../utils/spaceUtils.js";
+import { Vec2 } from "../utils/vec2.js";
 
 /**
  * Keep it square.

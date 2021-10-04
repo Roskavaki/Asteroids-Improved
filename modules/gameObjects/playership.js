@@ -1,9 +1,9 @@
-import { spaceobj } from "./spaceobj.js";
-import { tri } from "./shapes.js";
-import { Vec2 } from "./utils/vec2.js";
-import { BulletV2 } from "./gameObjects/bulletV2.js";
+import { spaceobj } from "../spaceobj.js";
+import { tri } from "../shapes.js";
+import { Vec2 } from "../utils/vec2.js";
+import { BulletV2 } from "./bulletV2.js";
 import { asteroid } from "./asteroid.js";
-import { CircleCollider } from "./colliders/circleCollider.js";
+import { CircleCollider } from "../colliders/circleCollider.js";
 
 class playership extends spaceobj {
 	constructor(objects, input, colour = "red") {

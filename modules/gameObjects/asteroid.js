@@ -1,9 +1,9 @@
-import { spaceobj } from "./spaceobj.js";
-import { rot , addVec } from "./utils/spaceUtils.js";
-import { scoreboard } from "./scoreboard.js";
-import * as utils from "./utils/spaceUtils.js";
-import { Vec2 } from "./utils/vec2.js";
-import { CircleCollider } from "./colliders/circleCollider.js";
+import { spaceobj } from "../spaceobj.js";
+import { rot , addVec } from "../utils/spaceUtils.js";
+import { scoreboard } from "../scoreboard.js";
+import * as utils from "../utils/spaceUtils.js";
+import { Vec2 } from "../utils/vec2.js";
+import { CircleCollider } from "../colliders/circleCollider.js";
 
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "yellow" , mass=10 ){

@@ -1,4 +1,5 @@
-import { checkCollision , checkCollisions , checkCollisionsOneToMany , checkInsideCircle  } from "./collisionUtils.js";
+import { checkCollision , checkCollisions , 
+	checkCollisionsOneToMany , checkInsideCircle  } from "../physics/collisionUtils.js";
 
 import { pix , line , drawVerts } from "./drawingUtils.js";
 import { circleDefault , lineDefault } from "./drawingUtils.js";

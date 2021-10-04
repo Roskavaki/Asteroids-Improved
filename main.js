@@ -1,4 +1,4 @@
-import { playership } from "./modules/playership.js";
+import { playership } from "./modules/gameObjects/playership.js";
 import * as utils from "./modules/utils/spaceUtils.js";
 import { scoreboard } from "./modules/scoreboard.js";
 import { Vec2 } from "./modules/utils/vec2.js";
