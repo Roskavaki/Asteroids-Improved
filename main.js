@@ -42,12 +42,14 @@ let pause = false;
 
 let currentLevel = 0;
 // 
-let levels = [  flockers , level1 , level2, bosslevel, victoryLevel ];
+let levels = [ level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
 
 let coopMode = false;
+
+let refreshRate =  30;
 
 
 //unused easier way to
@@ -72,11 +74,13 @@ function loadLevelIndex(ind , coopMode=false) {
 function resetPlayer( player ){
 	player.position = new Vec2( width / 2, height / 2 + 120);
 	player.velocity = Vec2.zero();
+	player.rotation = 0;
 }
 
 function resetPlayer2( player ){
 	player.position = new Vec2( width / 2, height / 2 + 170);
 	player.velocity = Vec2.zero();
+	player.rotation = 0;
 }
 
 function loadLevel( level , coopMode=false ){
@@ -204,7 +208,7 @@ function mainloop() {
 loadLevelIndex(currentLevel,coopMode);
 
 // Start the main loop
-setInterval(mainloop, 30);
+setInterval(mainloop, refreshRate);
 
 // make a json object containing key state, pass it into update functions along with the deltaT
 

@@ -33,7 +33,7 @@ export function lineBetweenVector2( ctx , p1 , p2 , color="red" , wrap=false){
  * @param {*} end 
  * @param {*} colour 
  */
-function lineDefault( ctx , start , end , colour){
+function lineDefault( ctx , start=[0,0] , end=[0,0] , colour='red'){
 	ctx.save();
 
 	ctx.strokeStyle = colour;

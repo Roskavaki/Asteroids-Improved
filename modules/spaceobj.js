@@ -22,6 +22,12 @@ class spaceobj extends obj {
     return ret;
   }
 
+  right(){
+    let ret = new Vec2(1,0);
+    ret.rotate( this.rotation );
+    return ret;
+  }
+
   update(deltaT, input) {
     super.update(deltaT);
     this.updateRotation(deltaT);

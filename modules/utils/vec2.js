@@ -38,6 +38,19 @@ export class Vec2 {
     this.scale(s);
   }
 
+  sum( arr = [] ){
+    let x = 0;
+    let y = 0;
+    for( let i=0; i<arr.length; i++){
+      let el = arr[i];
+      x+= el.x;
+      y+= el.y;
+    }
+    this.x = x;
+    this.y = y;
+    return this;
+  }
+
   /**
    * Creates new vector resulting from subtracting this one from another
    * @param {Vec2} other other vector
@@ -213,7 +226,27 @@ export class Vec2 {
     this.y = y;
   }
 
+  lerp( v0=0,  v1=1,  t = 0.5) {
+      return v0 + t * (v1 - v0);
+  }
   
+  lerpTo( v1 , t = 0.5){
+    this.x = this.lerp( this.x , v1.x , t);
+    this.y = this.lerp( this.y , v1.y , t);
+    return this;
+  }
+
+  static sumVectors( arr = [] ){
+    let x = 0;
+    let y = 0;
+    for( let i=0; i<arr.length; i++){
+      let el = arr[i];
+      x+= el.x;
+      y+= el.y;
+    }
+    return new Vec2( x,y);
+  }
+
   static addVectors(a,b){
     return new Vec2(a.x + b.x , a.y + b.y);
   }

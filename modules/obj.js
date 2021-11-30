@@ -15,7 +15,7 @@ class obj {
       this.verts = myVerts;
     }
 
-    this.color = colour;
+    this.colour = colour;
     this.position = new Vec2(0,0);
     this.localposition = new Vec2(0,0);
     this.rotation = 0;
@@ -85,7 +85,9 @@ class obj {
 
 
 
-
+  globalToLocalCoordinate(x,y,r){
+    return new Vec2( x*Math.cos(r) + y*Math.sin(r) , -x*Math.sin(r) + y*Math.cos(r) );
+  }
 
   addPosition(offset, wrap = false) {
     //this.position[0] += offset[0];
@@ -127,7 +129,7 @@ class obj {
 
     //Debug circle
     if( this.drawCollider ){
-      utils.circleDefault(ctx , this.position.toArray() , this.collisionRadius , this.color);
+      utils.circleDefault(ctx , this.position.toArray() , this.collisionRadius , this.colour);
     }
 
     this.children.forEach((child)=>{
@@ -141,7 +143,7 @@ class obj {
         this.verts,
         this.rotation,
         pos,
-        this.color,
+        this.colour,
         wrap
       );      
     }
