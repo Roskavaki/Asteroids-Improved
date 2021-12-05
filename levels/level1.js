@@ -38,4 +38,8 @@ function createLevel() {
   return level;
 }
 
+export function getName(){
+	return "Level 1";
+}
+
 export { createLevel };

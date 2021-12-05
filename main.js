@@ -2,30 +2,38 @@ import { playership } from "./modules/gameObjects/playership.js";
 import * as utils from "./modules/utils/spaceUtils.js";
 import { scoreboard } from "./modules/scoreboard.js";
 import { Vec2 } from "./modules/utils/vec2.js";
+import { Input } from "./modules/input.js";
 
 import {
 	drawTextUpperLeft,
+	drawTextCenterScreen
 } from "./modules/utils/textUtils.js";
-import { Input } from "./modules/input.js";
+
 
 import * as level1 from "./levels/level1.js";
 import * as level2 from "./levels/level2.js";
 import * as bosslevel from "./levels/boss1Level.js";
 import * as victoryLevel from "./levels/victoryLevel.js";
 import * as defeatLevel from "./levels/defeatLevel.js";
+import * as spinnerLevel from "./levels/spinnerLevel.js"
 import * as flockers from "./levels/flockersLevel.js";
+
+let levels = [spinnerLevel, level1, level2, bosslevel, victoryLevel ];
+let currentLevel = 0;
+let selectedLevel = 0;
+
+let pause = false;
+let coopMode = false;
+let refreshRate =  30;
 
 const canvas = document.getElementById("canvas");
 
 // Disable canvas alpha, for optimization
 const ctx = canvas.getContext("2d", { alpha: false });
-
-let gameInput = new Input(window);
-
 ctx.fillStyle = "green";
 let width = canvas.width;
 let height = canvas.height;
-
+let gameInput = new Input(window);
 let collisionObjs = [];
 let objs = [];
 let objectives = [];
@@ -37,19 +45,9 @@ let player2 = new playership(objs, gameInput, "red");
 player2.position = new Vec2( width / 2, height / 2 + 60);
 player2.playerNo = 2;
 
-// Pause rendering and game logic
-let pause = false;
-
-let currentLevel = 0;
-// 
-let levels = [ level1 , level2, bosslevel, victoryLevel ];
 let date = new Date();
 let currentTime = date.getTime();
 let lastTime = currentTime;
-
-let coopMode = false;
-
-let refreshRate =  30;
 
 
 //unused easier way to
@@ -136,12 +134,66 @@ function removeDestroyedObjects(objs) {
 	}
 }
 
+function clearScreen(){
+	ctx.fillStyle = "black";
+	ctx.fillRect(0, 0, width, height);
+}
+
 function showScoreboard(){
 	const fill = false;
 	drawTextUpperLeft( ctx, scoreboard.toString(), "yellow", width, height, 30, fill , "biting" );
 }
 
-let frame = 0;
+
+function levelSelectMenu(){
+	clearScreen();
+
+	//Draw ui ---
+    drawTextCenterScreen(ctx,'Select Level',width,height,50,false,'red','biting',0,-40);
+
+	let levelName = levels[selectedLevel].getName();
+
+	const arrowOffset = 130;
+	const verticalOffset = 30;
+	drawTextCenterScreen(ctx, levelName ,width,height,35,false,'red','biting',0, verticalOffset );
+
+	if( selectedLevel < levels.length-1 )
+		utils.drawTriangle(ctx, utils.deg2Rad(90) , [width/2+arrowOffset,height/2 + verticalOffset], 'red'); //right
+
+	if( selectedLevel > 0 )
+		utils.drawTriangle(ctx, utils.deg2Rad(270), [width/2-arrowOffset,height/2 + verticalOffset], 'red'); //left
+	
+	//--
+	// A/D to select level
+	if( gameInput.getKeyDown("D")){
+		selectedLevel ++;
+	}
+	if( gameInput.getKeyDown("A")){
+		selectedLevel --;
+	}
+
+	// Prevent index out of bounds
+	if( selectedLevel < 0) selectedLevel=0;
+	if( selectedLevel > levels.length-1 ) selectedLevel = levels.length-1;
+
+	// Load the selected level on spacebar press
+	if( gameInput.getKeyDown( 32 )){
+		loadLevelIndex(selectedLevel , coopMode);
+		currentLevel = selectedLevel;
+		pause=false;
+	}
+}
+
+function checkObjectives(){
+	//Objectives need work, only 1 per level atm
+	objectives = objectives.filter((ob) => !ob.markedForDestroy);
+	objectives.forEach((element) => {
+		let complete = element.checkIfComplete();
+		if (complete) {
+			objectives.pop();
+		}
+	});
+}
 
 // Main game loop to draw each frame
 function mainloop() {
@@ -157,13 +209,19 @@ function mainloop() {
 	if( gameInput.getKeyDown("o")){
 		dropOutPlayer2();
 	}
+
+	if( gameInput.getKeyDown("k")){
+		pause = !pause;
+		if( pause ) console.log( 'pause ');
+		else console.log( 'un-pause ');
+	}
 	
-	if (!pause) {		
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, width, height);
+	if (!pause) {
+		clearScreen();
 
 		utils.checkCollisions(objs);
 
+		// Update and draw objects
 		objs.forEach((element) => {
 			element.update(deltaT);
 			element.draw(ctx);
@@ -171,14 +229,7 @@ function mainloop() {
 
 		removeDestroyedObjects(objs);
 		
-		//Objectives need work, only 1 per level atm
-		objectives = objectives.filter((ob) => !ob.markedForDestroy);
-		objectives.forEach((element) => {
-			let complete = element.checkIfComplete();
-			if (complete) {
-				objectives.pop();
-			}
-		});
+		checkObjectives();
 
 		// Load next level if objectives complete
 		if (objectives.length < 1) {
@@ -199,6 +250,9 @@ function mainloop() {
 		if( player.hp <=0 ){
 			loadDefeatLevel( coopMode );
 		}		
+	}
+	else{
+		levelSelectMenu();
 	}
 
 	gameInput.clearkeydowns();

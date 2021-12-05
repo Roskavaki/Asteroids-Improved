@@ -35,3 +35,8 @@ export function createLevel() {
 
   	return level;
 }
+
+
+export function getName(){
+	return "flock";
+}

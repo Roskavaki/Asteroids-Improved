@@ -16,6 +16,14 @@ export class Input {
       e = e || window.event;
       delete this.pressed[e.keyCode];
     };
+
+    this.canvas.onkeypress = (e) => {
+      e = e || window.event;
+      this.pressed[e.keyCode] = true;
+      //delete this.pressed[e.keyCode];
+    };
+
+
   }
 
   clearkeydowns(){

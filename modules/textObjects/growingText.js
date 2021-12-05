@@ -30,6 +30,7 @@ export class GrowingText extends obj {
     if (this.textSize >= this.maxTextSize) {
       this.textSize = this.maxTextSize;
     }
+
     drawTextCenterScreen(
       ctx,
       this.myText,
@@ -37,6 +38,7 @@ export class GrowingText extends obj {
       this.screenheight,
       this.textSize
     );
+    
     if (this.textSize < this.maxTextSize) {
     } else {
       //	this.markedForDestroy=true;

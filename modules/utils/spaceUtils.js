@@ -2,7 +2,7 @@ import { checkCollision , checkCollisions ,
 	checkCollisionsOneToMany , checkInsideCircle  } from "../physics/collisionUtils.js";
 
 import { pix , line , drawVerts } from "./drawingUtils.js";
-import { circleDefault , lineDefault } from "./drawingUtils.js";
+import { circleDefault , drawTriangle , lineDefault } from "./drawingUtils.js";
 
 /** Wrap a coordinate around to the opposite side of the screen to create 
  * a toroidal coordinate system
@@ -118,11 +118,13 @@ function rot( point,  theta ){
 	return  [ xp, yp ] ;
 }
 
-function rotDegrees( point , theta ){
+function rotDegrees( point , theta=0 ){
 	return rot( point , theta * Math.PI/180 );
 }
 
-
+export function deg2Rad(theta=0){
+	return  theta * Math.PI/180;
+}
 
 export { distance }
 export { checkCollisions }
@@ -137,4 +139,4 @@ export { checkOutOfBounds }
 export { checkCollisionsOneToMany , }
 export { checkCollision }
 export { wrapCoordinates }
-export { drawVerts }
+export { drawVerts, drawTriangle }

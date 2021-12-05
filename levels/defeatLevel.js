@@ -20,4 +20,10 @@ function createLevel(){
 	return level;
 }
 
+
+export function getName(){
+	return "defeat";
+}
+
 export { createLevel };
+

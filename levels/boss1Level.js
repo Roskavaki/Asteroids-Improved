@@ -14,11 +14,8 @@ function createLevel() {
 
 	objs.push(boss , txt );
 	boxRing( objs , 6  , 90 , boss , -30);
-	boxRing( objs , 9 , 120 , boss , 30);
+	boxRing( objs , 9 , 120 , boss ,  30);
 	
-	//for( let i=0; i<ring.length; i++)
-	//	objs.push(ring[i]);
-
 	let level = {
 		levelname: "Bossfight",
 		objects: objs,
@@ -43,6 +40,11 @@ function boxRing( objects, n , orbitRadius , orbitObj , orbitSpeed ){
 		objects.push(box);
 	}
 	//return arr;
+}
+
+
+export function getName(){
+	return "Boss";
 }
 
 export { createLevel };

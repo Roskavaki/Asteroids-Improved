@@ -22,4 +22,9 @@ function createLevel(){
 	return level;
 }
 
+
+export function getName(){
+	return "Victory";
+}
+
 export { createLevel };

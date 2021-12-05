@@ -5,24 +5,21 @@ import { rectangle } from "../shapes.js";
 import { CapsuleCollider } from "../colliders/capsuleCollider.js";
 
 export class box1 extends obj {
-	constructor(objects, radius,  target, orbitRadius=40 ) {
+	constructor(objects, radius,  target, orbitRadius=40 , orient="vertical", width = 10, height=60) {
 		super(objects, null, "cyan", 5);
 	
 		this.radius = radius;
 		this.position = new Vec2(100,100);
 		this.velocity = new Vec2(0,0);
 
-		let width  = 10;
-		let height = 60;
-
-		this.verts = rectangle(width,height);
+		
 
 		this.orbitRadius = orbitRadius;
 		this.orbitSpeed = -50;
 
 		
 		this.colliderType = 2;
-		this.collisionRadius = width/2;
+		
 		this.canCollide = true;
 		this.collisionLayer = 3;
 		//this.drawCollider = true;
@@ -33,9 +30,22 @@ export class box1 extends obj {
 
 		this.wrap = true;
 
-		let p1 = new Vec2( 0 , -height/2 + width/2);
-		let p2 = new Vec2( 0 ,  height/2 - width/2);
-		this.collider = new CapsuleCollider(p1, p2, width/2);
+		if( orient == "vertical"){
+			console.log( "vertical box");
+			this.collisionRadius = width/2;
+			this.verts = rectangle(width,height);
+			let p1 = new Vec2( 0 , -height/2 + width/2);
+			let p2 = new Vec2( 0 ,  height/2 - width/2);
+			this.collider = new CapsuleCollider(p1, p2, width/2);
+		}
+		else{
+			console.log( "horizontal box")
+			this.collisionRadius = width/2;
+			this.verts = rectangle(height,width);
+			let p1 = new Vec2(  - height/2 , 0 );
+			let p2 = new Vec2(  + height/2 , 0 );
+			this.collider = new CapsuleCollider(p1, p2, width/2);
+		}
 
 	}
 

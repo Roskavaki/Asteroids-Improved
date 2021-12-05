@@ -87,6 +87,16 @@ function drawVerts(ctx , verts=[] , rotation=0 , position=[10,10], color="red" ,
 	}
 }
 
+export function drawTriangle(ctx, rotation=0, position=[0,0], color="red"){
+	var tri = [
+		[0, -20],
+		[-10, 10],
+		[10, 10],
+		[0, -20],
+	  ];
+	drawVerts( ctx , tri, rotation, position, color, false);
+}
+
 export { line }
 export { drawVerts }
 export { lineDefault , circleDefault }

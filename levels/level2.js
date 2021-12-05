@@ -39,11 +39,16 @@ export function createLevel() {
   let objectives = [ objective ];
 
   let level2 = {
-    levelname: "Level 1",
+    levelname: "Level 2",
     objects: objs,
     objectives: objectives,
   };
 
   return level2
+}
+
+
+export function getName(){
+	return "Level 2";
 }
 
