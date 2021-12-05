@@ -4,9 +4,11 @@ import { scoreboard } from "../scoreboard.js";
 import * as utils from "../utils/spaceUtils.js";
 import { Vec2 } from "../utils/vec2.js";
 import { CircleCollider } from "../colliders/circleCollider.js";
+import { Rigidbody } from "../physics/rigidbody.js";
 
 class asteroid extends spaceobj{
-	constructor( objects , radi = 64 , colour = "yellow" , mass=10 ){
+	constructor( objects , radi = 64 , colour = "yellow" , mass=10 , name="asteroid", 
+	velocity=new Vec2(0,0) , position=velocity=new Vec2(0,0) ){
 		super( objects , null ,colour );
 		this.radius = radi;
 
@@ -23,11 +25,19 @@ class asteroid extends spaceobj{
 		
 		this.angularVelocity = Math.random()*2;
 
+		this.position = position;
+		this.velocity = velocity;
+		this.rigidbody = new Rigidbody( this.velocity , this.angularVelocity , false);
+
 		this.wrap=true;
 
 		this.collisionDisabledWith = null;
 
 		this.collider = new CircleCollider( rad );
+
+		
+
+		this.name=name;
 	}
 
 	/* 

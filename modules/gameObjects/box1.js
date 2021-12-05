@@ -3,6 +3,7 @@ import { circleDefault } from "../utils/spaceUtils.js";
 import { Vec2 } from "../utils/vec2.js";
 import { rectangle } from "../shapes.js";
 import { CapsuleCollider } from "../colliders/capsuleCollider.js";
+import { Rigidbody  } from "../physics/rigidbody.js";
 
 export class box1 extends obj {
 	constructor(objects, radius,  target, orbitRadius=40 , orient="vertical", width = 10, height=60) {
@@ -30,27 +31,36 @@ export class box1 extends obj {
 
 		this.wrap = true;
 
+		this.rigidbody = new Rigidbody();
+		this.rigidbody.isKinematic = true;
+
+		this.collisionRadius = width/2;
+
 		if( orient == "vertical"){
 			console.log( "vertical box");
-			this.collisionRadius = width/2;
+			
 			this.verts = rectangle(width,height);
 			let p1 = new Vec2( 0 , -height/2 + width/2);
 			let p2 = new Vec2( 0 ,  height/2 - width/2);
-			this.collider = new CapsuleCollider(p1, p2, width/2);
+			this.collider = new CapsuleCollider(p1, p2, this.collisionRadius );
 		}
 		else{
-			console.log( "horizontal box")
-			this.collisionRadius = width/2;
+			console.log( "horizontal box");
+
 			this.verts = rectangle(height,width);
 			let p1 = new Vec2(  - height/2 , 0 );
 			let p2 = new Vec2(  + height/2 , 0 );
-			this.collider = new CapsuleCollider(p1, p2, width/2);
+			this.collider = new CapsuleCollider(p1, p2,this.collisionRadius );
 		}
 
 	}
 
 	update(deltaT) {
-		this.localrotation += this.orbitSpeed * deltaT * 3.14/180;
+		let rotationDiff = this.orbitSpeed * deltaT * 3.14/180;
+		this.localrotation += rotationDiff;
+
+		this.rigidbody.angularVelocity  = rotationDiff/deltaT;
+		
 		super.update(deltaT);
 		this.orbitAround( this.target.position ,  this.localrotation , new Vec2(this.orbitRadius, 0 ));
 	}
@@ -60,9 +70,14 @@ export class box1 extends obj {
 	 * @param {*} position position to orbit
 	 * @param {*} theta rotation around orbit
 	 */
-	orbitAround( position , theta , startingPoint ){
+	orbitAround( position , theta=10 , startingPoint ){
 		//let aa = startingPoint.rotate(theta)
+		let currentPos = this.position.cpy();
 		this.position = position.add( startingPoint.newRotated(theta) ) ;
+
+		let diff = this.position.sub( currentPos );
+		this.rigidbody.velocity = diff;
+
 		this.rotation = this.localrotation;
 
 		this.collider.rotate(theta);

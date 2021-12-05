@@ -1,5 +1,7 @@
 import * as utils from "./utils/spaceUtils.js";
 import { Vec2 } from "./utils/vec2.js";
+import { Transform } from "./physics/transform.js";
+import { Rigidbody } from "./physics/rigidbody.js";
 
 class obj {
   constructor(
@@ -21,6 +23,7 @@ class obj {
     this.rotation = 0;
     this.localrotation = 0;
 
+    this.rigidbody=null;
     this.collider=null;
     this.canCollide = false;
     this.collisionRadius = 10;
@@ -97,6 +100,10 @@ class obj {
     if (wrap) {
 		  this.position.wrap();
     }
+  }
+
+  addRotation( offset ){
+    this.rotation += offset;
   }
 
   addVert(x, y) {

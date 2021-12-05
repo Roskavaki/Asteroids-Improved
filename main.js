@@ -219,6 +219,7 @@ function mainloop() {
 	if (!pause) {
 		clearScreen();
 
+		// Physics
 		utils.checkCollisions(objs);
 
 		// Update and draw objects

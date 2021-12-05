@@ -100,7 +100,6 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 						objectB.onCollision( objectA );
 					}
 				}
-
 			}			
 		}
 	}
@@ -139,7 +138,7 @@ function handleCollision( objectA , objectB , restitution=1 ){
 	}
 }
 
-function handleCollisionCapsuleCapsule( objectA , objectB , restitution ){
+function handleCollisionCapsuleCapsule( objectA , objectB , restitution=1 ){
 	//TODO
 }
 
@@ -147,41 +146,36 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 		
 	let canCollide = checkCanCollide( circle , capsule );
 	if( !canCollide ){
-		//console.log( 'cannot collide')
 		return false;
 	}
 	let objectA = circle;
 	let objectB = capsule;
-
-
 	
 	let p1 = capsule.position.add( capsule.collider.p1 );
 	let p2 = capsule.position.add( capsule.collider.p2 );
 
 	let closest = closestPointOnSegment( circle.position , p1 , p2 );
-	//console.log( closest );
-
-
+	
 	let dir = circle.position.sub( closest );
 
 	let d = dir.length();
 
-	let totalRadius = circle.collisionRadius + capsule.collisionRadius;
+	let totalRadius = circle.collisionRadius + capsule.collider.collisionRadius;
 	if( d==0.0 || d > totalRadius ){
 		return false;
 	}
-
-
 
 	dir.scale( 1.0/d );
 
 	// amount to correct positions by
 	let corr = (totalRadius-d) / 1.0;
 	objectA.position.add2( dir.mul( corr )  );
+
+	//if( objectB.rigidboy.isKinematic )
 	//objectB.position.add2( dir.mul(  corr )  );
 	
 	let v1 = objectA.velocity.dot(dir);
-	let v2 = objectB.velocity.dot(dir);
+	let v2 = objectB.rigidbody.velocity.dot(dir);
 
 	let m1 = objectA.mass;
 	let m2 = objectB.mass;
@@ -191,7 +185,6 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 
 	//circle
 	objectA.velocity.add2( dir.mul(newV1 - v1) );
-
 
 	//objectA.velocity.setZero();
 	//objectB.velocity.add2( dir.mul(newV2 - v2) );
@@ -300,7 +293,6 @@ function checkCollisionCircleCircle( objectA , objectB ){
  */
 function checkCollisionsOneToMany( x , objects=[] ){
 	for ( let ob in objects ){
-		//console.log( ob )
 		let curr = objects[ob];
 
 		let layerA = curr.collisionLayer;

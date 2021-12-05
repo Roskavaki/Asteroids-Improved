@@ -13,19 +13,10 @@ const levelname = "Spinners";
 export function createLevel() {
  	let objs = [];
 
-	const a1 = new asteroid(objs, 32, "yellow");
-	a1.position = new Vec2( 100, 100);
-	a1.velocity = new Vec2( 0, 1.5 );
-	a1.objectName = "a1";
-	a1.mass = 20
-	a1.angularVelocity = -15
-
-	const a2 = new asteroid(objs, 16, "yellow");
-	a2.position = new Vec2( 350 , 600 );
-	a2.velocity = new Vec2( 0 , -1.1 );
-	a2.objectName = "a2";
-	a2.mass=40;
-	a2.angularVelocity = 10;
+	const a1 = new asteroid(objs, 32, "yellow", 20 , "a1", new Vec2( 1,  1.5 ), new Vec2( 100, 100) );
+	const a2 = new asteroid(objs, 16, "yellow", 40 , "a2", new Vec2( 0, -1.1 ), new Vec2( 350, 600) );
+	const a3 = new asteroid(objs, 32, "yellow", 30 , "a3" ,new Vec2(-1,  1.3 ), new Vec2( 500, 100) );
+	const a4 = new asteroid(objs,  8, "yellow", 16 , "a3" ,new Vec2(-1.8, -1.8 ), new Vec2( 600, 700) );
   	
 	const txt = new ShrinkingText( levelname );
 
@@ -36,7 +27,7 @@ export function createLevel() {
 	boxRing( objs , 6  , 65 , boss , -190);
 
 	//boss,
-	objs.push(  a2, txt);
+	objs.push( a1, a2, a3, a4, txt);
 
 	let level = {
 		levelname: levelname,

@@ -4,6 +4,7 @@ import { Vec2 } from "../utils/vec2.js";
 import { BulletV2 } from "./bulletV2.js";
 import { asteroid } from "./asteroid.js";
 import { CircleCollider } from "../colliders/circleCollider.js";
+import { Rigidbody } from "../physics/rigidbody.js";
 
 class playership extends spaceobj {
 	constructor(objects, input, colour = "red") {
@@ -35,7 +36,9 @@ class playership extends spaceobj {
 
 		this.collider = new CircleCollider(this.collisionRadius);
 
-		this.objectName = "player"
+		this.objectName = "player";
+
+		this.rigidbody = new Rigidbody();
 	}
 
 	draw(ctx) {
@@ -112,10 +115,13 @@ class playership extends spaceobj {
 	thrust(){
 		var thrust = this.forward().mul(-0.1);
 	
-		this.velocity = new Vec2( 
+		let newV =  new Vec2( 
 			this.velocity.x + thrust.x,
 			this.velocity.y + thrust.y
 		);
+		this.velocity = newV;
+
+		this.rigidbody.velocity = newV;
 	}
 
 	rotate( mul=1 , deltaT=0 ){
@@ -131,6 +137,7 @@ class playership extends spaceobj {
 			this.doDamage(2);
 	}
 
+	// unused
 	basicCollision( other ){
 		let norm = other.position.sub( this.position ).normalized();
 		let r =  norm.mul( 2*this.velocity.dot(norm) ).sub( this.velocity ).mul(-0.5);
