@@ -9,6 +9,7 @@ import { Rigidbody } from "../physics/rigidbody.js";
 class asteroid extends spaceobj{
 	constructor( objects , radi = 64 , colour = "yellow" , mass=10 , name="asteroid", 
 	velocity=new Vec2(0,0) , position=velocity=new Vec2(0,0) ){
+
 		super( objects , null ,colour );
 		this.radius = radi;
 
@@ -24,7 +25,6 @@ class asteroid extends spaceobj{
 		this.drawCollider = false;
 		
 		this.angularVelocity = Math.random()*2;
-
 		this.position = position;
 		this.velocity = velocity;
 		this.rigidbody = new Rigidbody( this.velocity , this.angularVelocity , false);
@@ -34,8 +34,6 @@ class asteroid extends spaceobj{
 		this.collisionDisabledWith = null;
 
 		this.collider = new CircleCollider( rad );
-
-		
 
 		this.name=name;
 	}

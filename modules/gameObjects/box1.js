@@ -13,8 +13,6 @@ export class box1 extends obj {
 		this.position = new Vec2(100,100);
 		this.velocity = new Vec2(0,0);
 
-		
-
 		this.orbitRadius = orbitRadius;
 		this.orbitSpeed = -50;
 
@@ -23,7 +21,6 @@ export class box1 extends obj {
 		
 		this.canCollide = true;
 		this.collisionLayer = 3;
-		//this.drawCollider = true;
 
 		this.hp=50;
 
@@ -52,7 +49,6 @@ export class box1 extends obj {
 			let p2 = new Vec2(  + height/2 , 0 );
 			this.collider = new CapsuleCollider(p1, p2,this.collisionRadius );
 		}
-
 	}
 
 	update(deltaT) {
@@ -82,7 +78,6 @@ export class box1 extends obj {
 
 		this.collider.rotate(theta);
 	}
-
 
 	onCollision(other) {}
 

@@ -4,5 +4,7 @@ export class Transform{
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
+		this.parent = null;
+		this.children = [];
 	}
 }

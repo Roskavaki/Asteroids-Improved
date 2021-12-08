@@ -5,6 +5,8 @@ import { BulletV2 } from "./bulletV2.js";
 import { asteroid } from "./asteroid.js";
 import { CircleCollider } from "../colliders/circleCollider.js";
 import { Rigidbody } from "../physics/rigidbody.js";
+import { Powerup } from "./powerup.js";
+import { deg2Rad } from "../utils/spaceUtils.js";
 
 class playership extends spaceobj {
 	constructor(objects, input, colour = "red") {
@@ -39,6 +41,9 @@ class playership extends spaceobj {
 		this.objectName = "player";
 
 		this.rigidbody = new Rigidbody();
+
+		
+		this.gunLevel = 1;
 	}
 
 	draw(ctx) {
@@ -135,6 +140,12 @@ class playership extends spaceobj {
 
 		if ( other instanceof asteroid )
 			this.doDamage(2);
+
+		if ( other instanceof Powerup ){
+			this.gunLevel++;
+			other.destroy();
+		}
+			
 	}
 
 	// unused
@@ -146,17 +157,40 @@ class playership extends spaceobj {
 		this.velocity = r;
 	}
 
+
+	//-- Weaponry
 	fire() {
 		if (!this.isReloading) {
-			let b = new BulletV2(this.objects , 4);
-			this.objects.push( b );
-			let forwardspeed = this.forward().mul( -this.fireSpeed );
-			b.velocity = new Vec2( this.velocity.x , this.velocity.y ).add( forwardspeed );
-			b.position = new Vec2( this.position.x , this.position.y );
-			b.collisionLayer = 2;
-			b.damage = 10;
-			this.reload();
+			if( this.gunLevel == 2){
+				this.fireOffset(-10);
+				this.fireOffset( 10);
+				this.reload();
+			}
+
+			if( this.gunLevel == 1){
+				this.fireOffset(0);
+				this.reload();
+			}
 		}
+	}
+
+	fireOffset(degree){
+		let fireVelocity = this.forward().newRotated(deg2Rad(degree)).mul( -this.fireSpeed );
+		let velo = this.velocity.cpy().add(  fireVelocity );
+		this.instantiateProjectile(this.objects, this.position.cpy() , velo);
+		//this.reload();
+	}
+
+	instantiateProjectile(objects, position=new Vec2(0,0), velocity=new Vec2(0,0)) {
+		let b = new BulletV2(this.objects , 4);
+		objects.push( b );
+		b.position = position;
+		b.velocity = velocity;
+		//let forwardspeed = this.forward().mul( -this.fireSpeed );
+		//b.velocity = new Vec2( this.velocity.x , this.velocity.y ).add( forwardspeed );
+		//b.position = new Vec2( this.position.x , this.position.y );
+		b.collisionLayer = 2;
+		b.damage = 10;
 	}
 
 	async reload() {

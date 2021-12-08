@@ -1,3 +1,4 @@
+import { CircleCollider } from "../colliders/circleCollider.js";
 import { obj  } from "../obj.js";
 import { checkOutOfBounds, circleDefault } from "../utils/spaceUtils.js";
 import { Vec2 } from "../utils/vec2.js";
@@ -18,6 +19,8 @@ export class BulletV2 extends obj{
 		this.damage = 5;
 
 		this.mass = 1;
+
+		this.collider = new CircleCollider(radius);
 
 		//console.log( 'BulletV2' );
 	}

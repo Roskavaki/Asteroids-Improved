@@ -5,6 +5,7 @@ import { nGon, sqr } from "../shapes.js";
 import { BulletV2 } from "./bulletV2.js";
 
 import { Vec2 } from "../utils/vec2.js";
+import { CircleCollider } from "../colliders/circleCollider.js";
 
 export class Boss1 extends spaceobj{
 
@@ -40,6 +41,8 @@ export class Boss1 extends spaceobj{
 
 		this.totalTime = 0;
 
+		this.collider = new CircleCollider(radius);
+
 	}
 
 	sizeHpRelation( hp ){
@@ -50,6 +53,8 @@ export class Boss1 extends spaceobj{
 		this.radius = radius;
 		this.collisionRadius = radius;
 		this.verts = nGon(this.sides,radius);
+
+		this.collider.collisionRadius = radius;
 	}
 
 	update( deltaT ){

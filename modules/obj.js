@@ -23,6 +23,7 @@ class obj {
     this.rotation = 0;
     this.localrotation = 0;
 
+    this.transform=null;
     this.rigidbody=null;
     this.collider=null;
     this.canCollide = false;
@@ -127,8 +128,8 @@ class obj {
     this.parent=null;
   }
 
+  /** Call this to destroy the object */
   destroy() {
-    //	console.log( 'this.destroy' );
     this.markedForDestroy = true;
   }
 

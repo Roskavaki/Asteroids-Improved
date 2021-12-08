@@ -11,7 +11,9 @@ export class Collider{
 		this.colliderType = 1;
 
 		// Set true if not allowed to be moved by collisions with other bodies
-		this.static = false; 
+		this.static = false;
+
+		this.trigger = false;
 	}
 
 	// For debug

@@ -106,20 +106,20 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 }
 
 
-
+// main method
 function handleCollision( objectA , objectB , restitution=1 ){
-	let colliderA = objectA.colliderType;
-	let colliderB = objectB.colliderType;
 
 	if( objectA == null || objectB == null ){
 		console.log( 'null collision object');
 		return false;
 	}
 
-	const circle = 1;
-	const capsule =2;
-	
+	let colliderA = objectA.colliderType;
+	let colliderB = objectB.colliderType;
 
+	const circle  = 1;
+	const capsule = 2;
+	
 	if( colliderA == circle ){
 		if( colliderB == circle ){
 			return handleCollisionCircleCircle( objectA , objectB , restitution );
@@ -205,6 +205,13 @@ function handleCollisionCircleCircle( objectA , objectB , restitution=1 ){
 
 	if( d == 0.0 || d > totalRadius)
 		return false;
+
+	let trigA = objectA.collider.trigger;
+	let trigB = objectB.collider.trigger;
+
+	if( trigA || trigB ){
+		return true;
+	}
 
 	dir.scale( 1.0/d );
 
