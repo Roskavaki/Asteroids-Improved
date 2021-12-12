@@ -12,11 +12,11 @@ import { closestPointOnSegment } from "./closestPointOnSegment.js";
  *
  */
 export const collisionLayers = [
-	[1, 1, 0, 0, 1], //other, general case
+	[1, 1, 0, 1, 1], //other, general case
 	[1, 1, 0, 1, 1], //player
-	[0, 0, 0, 1, 1], //playerbullet
-	[0, 1, 1, 1, 0], //asteroid
-	[1, 1, 1, 0, 0] //enemybullet
+	[1, 0, 0, 1, 1], //playerbullet
+	[1, 1, 1, 0, 0], //asteroid
+	[0, 1, 1, 0, 0] //enemybullet
 ];
 
 export const collisionLayerNames = {
@@ -93,7 +93,7 @@ function checkInsideCircle( p1=[0,0] , p2=[1,1] , radius=1 ){
 				let objectB = objects[j];
 
 				if( objectB.canCollide ){
-					let collision = handleCollision( objectA , objectB );
+					let collision = handleCollision( objectA , objectB, restitution );
 
 					if( collision ){
 						objectA.onCollision( objectB );
@@ -167,6 +167,7 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 
 	dir.scale( 1.0/d );
 
+	// When capsule is immovable
 	// amount to correct positions by
 	let corr = (totalRadius-d) / 1.0;
 	objectA.position.add2( dir.mul( corr )  );
@@ -178,7 +179,7 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 	let v2 = objectB.rigidbody.velocity.dot(dir);
 
 	let m1 = objectA.mass;
-	let m2 = objectB.mass;
+	let m2 = objectB.rigidbody.mass;
 	
 	let newV1 = ( m1*v1 + m2*v2 - m2*(v1-v2)*restitution) / (m1+m2);
 	let newV2 = ( m1*v1 + m2*v2 - m1*(v2-v1)*restitution) / (m1+m2);
@@ -187,7 +188,7 @@ function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 	objectA.velocity.add2( dir.mul(newV1 - v1) );
 
 	//objectA.velocity.setZero();
-	//objectB.velocity.add2( dir.mul(newV2 - v2) );
+	//objectB.rigidbody.velocity.add2( dir.mul(newV2 - v2) );
 
 	return true;
 }
@@ -209,6 +210,7 @@ function handleCollisionCircleCircle( objectA , objectB , restitution=1 ){
 	let trigA = objectA.collider.trigger;
 	let trigB = objectB.collider.trigger;
 
+	// One of them is a trigger collider
 	if( trigA || trigB ){
 		return true;
 	}
@@ -226,8 +228,9 @@ function handleCollisionCircleCircle( objectA , objectB , restitution=1 ){
 	let m1 = objectA.mass;
 	let m2 = objectB.mass;
 	
-	let newV1 = ( m1*v1 + m2*v2 - m2*(v1-v2)*restitution) / (m1+m2);
-	let newV2 = ( m1*v1 + m2*v2 - m1*(v2-v1)*restitution) / (m1+m2);
+	let mv = m1*v1 + m2*v2;
+	let newV1 = ( mv - m2*(v1-v2)*restitution ) / ( m1+m2 );
+	let newV2 = ( mv - m1*(v2-v1)*restitution ) / ( m1+m2 );
 
 	objectA.velocity.add2( dir.mul(newV1 - v1) );
 	objectB.velocity.add2( dir.mul(newV2 - v2) );

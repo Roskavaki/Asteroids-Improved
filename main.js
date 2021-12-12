@@ -220,7 +220,7 @@ function mainloop() {
 		clearScreen();
 
 		// Physics
-		utils.checkCollisions(objs);
+		utils.checkCollisions(objs , 0.9);
 
 		// Update and draw objects
 		objs.forEach((element) => {

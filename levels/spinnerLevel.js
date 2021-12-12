@@ -26,7 +26,7 @@ export function createLevel() {
 	let objectives = [objective];
 
 	const boss = new Boss1(objs);
-	boxRing( objs , 4  , 65 , boss , -190);
+	boxRing( objs , 3  , 65 , boss , -190);
 
 //, 8, "yellow",10,"powerup", new Vec2(0,0) , new Vec2(0,0)  
 	const pwr = new Powerup(objs ,"yellow",15,"powerup", new Vec2(359,600) , new Vec2(0,-2)  );

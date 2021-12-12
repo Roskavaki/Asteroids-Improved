@@ -32,7 +32,7 @@ class playership extends spaceobj {
 
 		this.maxHp = this.hp;
 
-		this.mass = 5.0;
+		this.mass = 10.0;
 
 		this.playerNo = 1;
 
@@ -44,6 +44,8 @@ class playership extends spaceobj {
 
 		
 		this.gunLevel = 1;
+
+		this.powerupShots = 0;
 	}
 
 	draw(ctx) {
@@ -143,6 +145,7 @@ class playership extends spaceobj {
 
 		if ( other instanceof Powerup ){
 			this.gunLevel++;
+			this.powerupShots = 10;
 			other.destroy();
 		}
 			
@@ -164,12 +167,17 @@ class playership extends spaceobj {
 			if( this.gunLevel == 2){
 				this.fireOffset(-10);
 				this.fireOffset( 10);
-				this.reload();
+				this.powerupShots--;
+				this.reload(0.40);
 			}
 
 			if( this.gunLevel == 1){
 				this.fireOffset(0);
-				this.reload();
+				this.reload(0.25);
+			}
+
+			if( this.powerupShots <= 0){
+				this.gunLevel=1;
 			}
 		}
 	}
@@ -178,7 +186,6 @@ class playership extends spaceobj {
 		let fireVelocity = this.forward().newRotated(deg2Rad(degree)).mul( -this.fireSpeed );
 		let velo = this.velocity.cpy().add(  fireVelocity );
 		this.instantiateProjectile(this.objects, this.position.cpy() , velo);
-		//this.reload();
 	}
 
 	instantiateProjectile(objects, position=new Vec2(0,0), velocity=new Vec2(0,0)) {
@@ -193,11 +200,11 @@ class playership extends spaceobj {
 		b.damage = 10;
 	}
 
-	async reload() {
+	async reload( reloadTime=0.25 ) {
 		this.isReloading = true;
 		setTimeout(() => {
 			this.isReloading = false;
-		}, this.reloadTime * 1000);
+		}, reloadTime * 1000);
 	}
 }
 

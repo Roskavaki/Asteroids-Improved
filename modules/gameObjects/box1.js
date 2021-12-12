@@ -20,7 +20,9 @@ export class box1 extends obj {
 		this.colliderType = 2;
 		
 		this.canCollide = true;
-		this.collisionLayer = 3;
+
+		// 0=general case,   3=asteroid
+		this.collisionLayer = 0;
 
 		this.hp=50;
 
@@ -30,6 +32,7 @@ export class box1 extends obj {
 
 		this.rigidbody = new Rigidbody();
 		this.rigidbody.isKinematic = true;
+		this.rigidbody.mass = 40;
 
 		this.collisionRadius = width/2;
 
@@ -52,6 +55,8 @@ export class box1 extends obj {
 	}
 
 	update(deltaT) {
+		let prevRotation = this.rotation;
+
 		let rotationDiff = this.orbitSpeed * deltaT * 3.14/180;
 		this.localrotation += rotationDiff;
 
@@ -74,7 +79,7 @@ export class box1 extends obj {
 		let diff = this.position.sub( currentPos );
 		this.rigidbody.velocity = diff;
 
-		this.rotation = this.localrotation;
+		this.rotation = theta;
 
 		this.collider.rotate(theta);
 	}

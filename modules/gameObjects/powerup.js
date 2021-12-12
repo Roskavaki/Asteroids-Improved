@@ -27,8 +27,6 @@ export class Powerup extends spaceobj{
 		this.collider = new CircleCollider( this.collisionRadius );
 
 		this.collider.trigger=true;
-		this.drawCollider=true;
-
 		this.upgrade = "multishot";
 	}
 

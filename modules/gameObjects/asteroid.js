@@ -109,7 +109,8 @@ class asteroid extends spaceobj{
 		let child = new asteroid( this.objects , 
 			this.radius/2 , this.colour , this.mass/2);
 
-		child.position =  new Vec2 ( this.position.x + offset.x , this.position.y + offset.y  );
+		child.position =  this.position.cpy(); //new Vec2 ( this.position.x + offset.x , this.position.y + offset.y  );
+		
 		child.velocity =  this.velocity.cpy();
 
 
@@ -122,11 +123,11 @@ class asteroid extends spaceobj{
 		//let axis = this.velocity.normalized().mul( Math.random() * randomMultiplier );
 		//axis.rotDegrees( 90 );
 
-		//child.velocity = child.velocity.add( randomVelocity );
+		child.velocity = child.velocity.add( randomVelocity );
 
-		child.delayedEnableBrotherCollision();
+		//child.delayedEnableBrotherCollision();
 
-		child.collisionDisabledWith = collisionDisabledWith;
+		//child.collisionDisabledWith = collisionDisabledWith;
 
 		this.objects.push( child );
 

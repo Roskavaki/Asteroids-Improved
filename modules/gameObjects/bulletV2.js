@@ -13,7 +13,7 @@ export class BulletV2 extends obj{
 
 		this.collisionRadius = radius;
 
-		this.collisionLayer = 4;
+		this.collisionLayer = 0;
 		this.canCollide=true;
 
 		this.damage = 5;
