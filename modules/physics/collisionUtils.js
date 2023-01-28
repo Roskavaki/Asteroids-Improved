@@ -145,23 +145,23 @@ function handleCollisionCapsuleCapsule( objectA , objectB , restitution=1 ){
 function handleCollisionCircleCapsule( circle , capsule , restitution=1 ){
 		
 	let canCollide = checkCanCollide( circle , capsule );
-	if( !canCollide ){
+	if( !canCollide ){//The objects cannot collide at all.  Just return
 		return false;
 	}
 	let objectA = circle;
 	let objectB = capsule;
 	
-	let p1 = capsule.position.add( capsule.collider.p1 );
-	let p2 = capsule.position.add( capsule.collider.p2 );
+	let capsuleStrt = capsule.position.add( capsule.collider.p1 );
+	let capsuleEnd  = capsule.position.add( capsule.collider.p2 );
 
-	let closest = closestPointOnSegment( circle.position , p1 , p2 );
+	let closestPointOnCapsule = closestPointOnSegment( circle.position , capsuleStrt , capsuleEnd );
 	
-	let dir = circle.position.sub( closest );
+	let dir = objectA.position.sub( closestPointOnCapsule );
 
 	let d = dir.length();
 
 	let totalRadius = circle.collisionRadius + capsule.collider.collisionRadius;
-	if( d==0.0 || d > totalRadius ){
+	if( d==0.0 || d > totalRadius ){ //The circle is too far away from the capsule, no collision can happen
 		return false;
 	}
 

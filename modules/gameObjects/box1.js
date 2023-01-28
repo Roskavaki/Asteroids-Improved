@@ -1,5 +1,4 @@
 import { obj } from "../obj.js";
-import { circleDefault } from "../utils/spaceUtils.js";
 import { Vec2 } from "../utils/vec2.js";
 import { rectangle } from "../shapes.js";
 import { CapsuleCollider } from "../colliders/capsuleCollider.js";
